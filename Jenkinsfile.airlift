@@ -13,17 +13,17 @@ pipeline {
   stages {
     stage("Checkout Airlifts"){
       steps{
-        git url: "https://github.com/airlift/airlift.git", branch: "$AIRLIFT_BRANCH"
+        git url: "https://github.com/airlift/airlift.git", branch: "${AIRLIFT_BRANCH}"
       }
     }
     stage("Build Airlift"){
       steps{
         withMaven(
                 maven: 'maven3',
-                jdk: "$JDK",
+                jdk: "${JDK}",
                 publisherStrategy: 'EXPLICIT',
                 mavenOpts: '-Xms2g -Xmx4g') {
-          sh "mvn -V -B -U clean install -DskipTests -T2 -Dmaven.test.failure.ignore=true -fae -Ddep.jetty.version=$JETTY_VERSION"
+          sh "mvn -V -B -U clean install -DskipTests -T2 -Dmaven.test.failure.ignore=true -fae -Ddep.jetty.version=${JETTY_VERSION}"
           junit testResults: '**/target/surefire-reports/*.xml'
         }
       }
