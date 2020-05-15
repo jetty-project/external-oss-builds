@@ -24,6 +24,13 @@ pipeline {
                 publisherStrategy: 'EXPLICIT',
                 mavenOpts: '-Xms2g -Xmx6g') {
           sh "mvn -V -B -U clean install -DskipTests -T3 -Dmaven.test.failure.ignore=true -fae -Ddep.jetty.version=${JETTY_VERSION}"
+        }
+      }
+      post {
+        always {
+          script{
+            currentBuild.description = "Build Airlift branch ${AIRLIFT_BRANCH} with Jetty Version ${JETTY_VERSION}"
+          }
           junit testResults: '**/target/surefire-reports/*.xml'
         }
       }
