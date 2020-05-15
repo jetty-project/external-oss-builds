@@ -1,0 +1,7 @@
+initscript {
+  configurations.all {
+    resolutionStrategy.dependencySubstitution {
+      subsitute module("org.eclipse.jetty:jetty-bom:") with module("org.eclipse.jetty:jetty-bom:9.4.29-SNAPSHOT")
+    }
+  }
+}

@@ -19,7 +19,8 @@ pipeline {
     stage("Build SpringFramework"){
       steps{
         withEnv(["JAVA_HOME=${ tool "$jdk" }","PATH+GRADLE=${ tool '6.4' }"]) {
-          sh './gradlew clean test --no-daemon'
+          sh "ls -lrt"
+          sh './gradlew clean test --no-daemon --init-script init.gradle.spring-framework'
         }
       }
       post {
