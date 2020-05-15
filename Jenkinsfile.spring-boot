@@ -1,0 +1,39 @@
+#!groovy
+pipeline {
+  agent { node { label 'linux' } }
+  options {
+    buildDiscarder logRotator( numToKeepStr: '20' )
+  }
+  parameters {
+    string( defaultValue: '9.4.29-SNAPSHOT', description: 'Jetty version to use to build SpringBoot project',
+            name: 'JETTY_VERSION' )
+    string( defaultValue: 'jdk8', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
+    string( defaultValue: '2.2.x', description: 'springboot branch', name: 'SPRINGBOOT_BRANCH' )
+  }
+  stages {
+    stage("Checkout SpringBoot"){
+      steps{
+        git url: "https://github.com/spring-projects/spring-boot.git", branch: "${SPRINGBOOT_BRANCH}"
+      }
+    }
+    stage("Build Airlift"){
+      steps{
+        withMaven(
+                maven: 'maven3',
+                jdk: "$jdk",
+                publisherStrategy: 'EXPLICIT',
+                mavenOpts: '-Xms2g -Xmx6g') {
+          sh "mvn -V -B -U clean install -T3 -Dmaven.test.failure.ignore=true -fae -Ddep.jetty.version=${JETTY_VERSION}"
+        }
+      }
+      post {
+        always {
+          script{
+            currentBuild.description = "Build SpringBoot branch ${SPRINGBOOT_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
+          }
+          junit testResults: '**/target/surefire-reports/*.xml'
+        }
+      }
+    }
+  }
+}
