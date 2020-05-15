@@ -22,7 +22,7 @@ pipeline {
           withMaven( maven: 'maven3',
                      jdk: "$jdk",
                      publisherStrategy: 'EXPLICIT',
-                     mavenOpts: '-Xms2g -Xmx6g' ) {
+                     mavenOpts: '-Xms4g -Xmx8g' ) {
             sh "mvn -V -B -U clean install -T3 -Dmaven.test.failure.ignore=true -fae -Ddep.jetty.version=${JETTY_VERSION}"
           }
         }
