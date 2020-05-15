@@ -13,12 +13,14 @@ pipeline {
   stages {
     stage("Checkout SpringBoot"){
       steps{
+        stash name: 'init.gradle.spring-framework', includes: 'init.gradle.spring-framework'
         git url: "https://github.com/spring-projects/spring-framework.git", branch: "${SPRINGFRAMEWORK_BRANCH}"
       }
     }
     stage("Build SpringFramework"){
       steps{
         withEnv(["JAVA_HOME=${ tool "$jdk" }","PATH+GRADLE=${ tool '6.4' }"]) {
+          unstash name: 'init.gradle.spring-framework'
           sh "ls -lrt"
           sh './gradlew clean test --no-daemon --init-script init.gradle.spring-framework'
         }
