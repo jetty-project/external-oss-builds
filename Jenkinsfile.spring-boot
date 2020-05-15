@@ -18,12 +18,13 @@ pipeline {
     }
     stage("Build SpringBoot"){
       steps{
-        withMaven(
-                maven: 'maven3',
-                jdk: "$jdk",
-                publisherStrategy: 'EXPLICIT',
-                mavenOpts: '-Xms2g -Xmx6g') {
-          sh "mvn -V -B -U clean install -T3 -Dmaven.test.failure.ignore=true -fae -Ddep.jetty.version=${JETTY_VERSION}"
+        withEnv(["JAVA_HOME=${ tool "$jdk" }","PATH+GRADLE=${ tool '6.4' }"]) {
+          withMaven( maven: 'maven3',
+                     jdk: "$jdk",
+                     publisherStrategy: 'EXPLICIT',
+                     mavenOpts: '-Xms2g -Xmx6g' ) {
+            sh "mvn -V -B -U clean install -T3 -Dmaven.test.failure.ignore=true -fae -Ddep.jetty.version=${JETTY_VERSION}"
+          }
         }
       }
       post {
