@@ -7,7 +7,7 @@ pipeline {
   parameters {
     string( defaultValue: '9.4.29-SNAPSHOT', description: 'Jetty version to use to build Airlift project',
             name: 'JETTY_VERSION' )
-    string( defaultValue: 'jdk11', description: 'JDK to use', name: 'JDK' )
+    string( defaultValue: 'jdk11', description: 'JDK to use (jdk11,jdk14)', name: 'JDK' )
     string( defaultValue: 'master', description: 'Airlift branch', name: 'AIRLIFT_BRANCH' )
   }
   stages {
