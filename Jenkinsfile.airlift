@@ -29,7 +29,7 @@ pipeline {
       post {
         always {
           script{
-            currentBuild.description = "Build Airlift branch ${AIRLIFT_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${JDK}"
+            currentBuild.description = "Build Airlift branch ${AIRLIFT_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
           }
           junit testResults: '**/target/surefire-reports/*.xml'
         }
