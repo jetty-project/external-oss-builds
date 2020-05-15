@@ -1,0 +1,35 @@
+#!groovy
+pipeline {
+  agent { node { label 'linux' } }
+  options {
+    buildDiscarder logRotator( numToKeepStr: '20' )
+  }
+  parameters {
+    string( defaultValue: '9.4.29-SNAPSHOT', description: 'Jetty version to use to build Airlift project',
+            name: 'JETTY_VERSION' )
+    string( defaultValue: 'jdk11', description: 'JDK to use', name: 'JDK' )
+    string( defaultValue: 'master', description: 'Airlift branch', name: 'AIRLIFT_BRANCH' )
+  }
+  stages {
+    stage("Checkout Airlifts"){
+      steps{
+
+      }
+      git url: "https://github.com/airlift/airlift.git", branch: "$AIRLIFT_BRANCH"
+    }
+    stage("Build Airlift"){
+      steps{
+        withMaven(
+                maven: 'maven3',
+                jdk: "$JDK",
+                publisherStrategy: 'EXPLICIT',
+                mavenOpts: '-Xms2g -Xmx4g') {
+          sh "mvn -V -B -U clean install -DskipTests -T2 -Dmaven.test.failure.ignore=true -fae -Ddep.jetty.version=$JETTY_VERSION"
+          junit testResults: '**/target/surefire-reports/*.xml,**/target/invoker-reports/TEST*.xml'
+        }
+      }
+    }
+  }
+
+
+}
