@@ -20,7 +20,7 @@ pipeline {
       steps{
         withMaven(
                 maven: 'maven3',
-                jdk: "$JDK",
+                jdk: "$jdk",
                 publisherStrategy: 'EXPLICIT',
                 mavenOpts: '-Xms2g -Xmx4g') {
           sh "mvn -V -B -U clean install -DskipTests -T2 -Dmaven.test.failure.ignore=true -fae -Ddep.jetty.version=${JETTY_VERSION}"
