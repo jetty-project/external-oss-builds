@@ -14,7 +14,7 @@ pipeline {
   stages {
     stage("Checkout SpringBoot"){
       steps{
-        git url: "https://github.com/${GITHUB_ORG}"/spring-boot.git", branch: "${SPRINGBOOT_BRANCH}"
+        git url: "https://github.com/${GITHUB_ORG}/spring-boot.git", branch: "${SPRINGBOOT_BRANCH}"
       }
     }
     stage("Build SpringBoot"){
