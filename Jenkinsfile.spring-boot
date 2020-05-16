@@ -24,7 +24,7 @@ pipeline {
                      jdk: "$jdk",
                      publisherStrategy: 'EXPLICIT',
                      mavenOpts: '-Xms4g -Xmx8g' ) {
-            sh "mvn -V -B -U clean install -Dmaven.test.failure.ignore=true -fae -Ddep.jetty.version=${JETTY_VERSION}"
+            sh "mvn -V -B -U clean install -Dmaven.test.failure.ignore=true -Ddep.jetty.version=${JETTY_VERSION}"
           }
         }
       }
