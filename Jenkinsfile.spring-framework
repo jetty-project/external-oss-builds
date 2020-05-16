@@ -22,7 +22,7 @@ pipeline {
         withEnv(["JAVA_HOME=${ tool "$jdk" }","PATH+GRADLE=${ tool '6.4' }"]) {
           unstash name: 'init.gradle.spring-framework'
           sh "ls -lrt"
-          sh './gradlew clean test --no-daemon --init-script init.gradle.spring-framework'
+          sh './gradlew clean test jar --no-daemon --init-script init.gradle.spring-framework'
         }
       }
       post {
