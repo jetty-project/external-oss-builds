@@ -34,8 +34,8 @@ pipeline {
             currentBuild.description = "Build SpringBoot branch ${GITHUB_ORG}/${SPRINGBOOT_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
           }
           junit testResults: '**/target/surefire-reports/*.xml'
-          archiveArtifacts artifacts: "reports/**", allowEmptyArchive: true
-          publishHTML( [allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/reports/tests/test/", reportFiles: 'index.html', reportName: 'Build Report', reportTitles: ''] )
+          archiveArtifacts artifacts: "spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/build/reports/tests/test/**", allowEmptyArchive: true
+          publishHTML( [allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/build/reports/tests/test/", reportFiles: 'index.html', reportName: 'Build Report', reportTitles: ''] )
 
         }
       }
