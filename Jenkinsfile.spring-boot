@@ -8,12 +8,13 @@ pipeline {
     string( defaultValue: '9.4.29-SNAPSHOT', description: 'Jetty version to use to build SpringBoot project',
             name: 'JETTY_VERSION' )
     string( defaultValue: 'jdk8', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
+    string( defaultValue: 'spring-projects', description: 'github org to use', name: 'GITHUB_ORG' )
     string( defaultValue: '2.2.x', description: 'springboot branch', name: 'SPRINGBOOT_BRANCH' )
   }
   stages {
     stage("Checkout SpringBoot"){
       steps{
-        git url: "https://github.com/spring-projects/spring-boot.git", branch: "${SPRINGBOOT_BRANCH}"
+        git url: "https://github.com/${GITHUB_ORG}"/spring-boot.git", branch: "${SPRINGBOOT_BRANCH}"
       }
     }
     stage("Build SpringBoot"){
@@ -30,7 +31,7 @@ pipeline {
       post {
         always {
           script{
-            currentBuild.description = "Build SpringBoot branch ${SPRINGBOOT_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
+            currentBuild.description = "Build SpringBoot branch ${GITHUB_ORG}/${SPRINGBOOT_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
           }
           junit testResults: '**/target/surefire-reports/*.xml'
         }
