@@ -24,7 +24,7 @@ pipeline {
                      jdk: "$jdk",
                      publisherStrategy: 'EXPLICIT',
                      mavenOpts: '-Xms4g -Xmx8g' ) {
-            sh "./mvnw -V -B -U clean install -Dmaven.test.failure.ignore=true -Dgradle.task=clean -Ddep.jetty.version=${JETTY_VERSION}"
+            sh "./mvnw -V -B -U clean install -Dmaven.test.failure.ignore=true -Dgradle.task=jar -Ddep.jetty.version=${JETTY_VERSION}"
           }
         }
       }
@@ -34,8 +34,8 @@ pipeline {
             currentBuild.description = "Build SpringBoot branch ${GITHUB_ORG}/${SPRINGBOOT_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
           }
           junit testResults: '**/target/surefire-reports/*.xml'
-          archiveArtifacts artifacts: "spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/build/reports/tests/test/**", allowEmptyArchive: true
-          publishHTML( [allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/build/reports/tests/test/", reportFiles: 'index.html', reportName: 'Build Report', reportTitles: ''] )
+          //archiveArtifacts artifacts: "spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/build/reports/tests/test/**", allowEmptyArchive: true
+          //publishHTML( [allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/build/reports/tests/test/", reportFiles: 'index.html', reportName: 'Build Report', reportTitles: ''] )
 
         }
       }
