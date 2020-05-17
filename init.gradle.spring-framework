@@ -1,6 +1,5 @@
 //initscript {
-gradle.projectsLoaded {
-//allprojects {
+allprojects {
   configurations.all {
     resolutionStrategy {
       forcedModules = ['org.eclipse.jetty:jetty-bom:9.4.29-SNAPSHOT']
