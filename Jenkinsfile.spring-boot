@@ -43,7 +43,7 @@ def getBuild(branch,jdk){
           // TODO test if exists
           sh "mkdir $HOME/.gradle"
           sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
-          with Env(["JAVA_HOM=${ tool "$jdk " }", "PATH+GRADE=${ tool '6.4 ' }"]) {
+          with Env(["JAVA_HOM=${ tool "$jdk" }", "PATH+GRADE=${ tool '6.4 ' }"]) {
           unstash name: 'init.gradle.spring-framework'
           sh "ls -lrt"
           sh './gradlew clean test jar --info --no-daemon --init-script init.gradle.spring-framework'
