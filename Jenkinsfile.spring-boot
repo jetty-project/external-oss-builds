@@ -28,8 +28,8 @@ pipeline {
             currentBuild.description = "Build SpringBoot branch ${GITHUB_ORG}/${SPRINGBOOT_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
           }
           junit testResults: '**/target/surefire-reports/*.xml'
-          //archiveArtifacts artifacts: "spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/build/reports/tests/test/**", allowEmptyArchive: true
-          //publishHTML( [allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/build/reports/tests/test/", reportFiles: 'index.html', reportName: 'Build Report', reportTitles: ''] )
+          archiveArtifacts artifacts: "spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/build/reports/tests/test/**", allowEmptyArchive: true
+          publishHTML( [allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/build/reports/tests/test/", reportFiles: 'index.html', reportName: 'Build Report', reportTitles: ''] )
 
         }
       }
@@ -42,7 +42,7 @@ def getBuild(branch,jdk){
     withEnv(["JAVA_HOME=${ tool "$jdk" }","PATH+GRADLE=${ tool '6.4' }"]) {
       unstash name: 'init.gradle.spring-framework'
       sh "ls -lrt"
-      sh './gradlew clean test jar --no-daemon --init-script init.gradle.spring-framework'
+      sh './gradlew clean test jar --info --no-daemon --init-script init.gradle.spring-framework'
     }
   } else {
     withEnv(["JAVA_HOME=${ tool "$jdk" }","PATH+GRADLE=${ tool '6.4' }"]) {
