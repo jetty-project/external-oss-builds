@@ -19,10 +19,15 @@ pipeline {
     }
     stage("Build SpringFramework"){
       steps{
-        withEnv(["JAVA_HOME=${ tool "$jdk" }","PATH+GRADLE=${ tool '6.4' }"]) {
-          unstash name: 'init.gradle.spring-framework'
-          sh "ls -lrt"
-          sh './gradlew clean test jar --no-daemon --init-script init.gradle.spring-framework'
+        configFileProvider([configFile(fileId: 'init.gradle', variable: 'INIT_GRADLE')]) {
+          // TODO test if exists
+          sh "mkdir $HOME/.gradle"
+          sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
+          withEnv( ["JAVA_HOME=${tool "$jdk"}", "PATH+GRADLE=${tool '6.4'}"] ) {
+            unstash name: 'init.gradle.spring-framework'
+            sh "ls -lrt"
+            sh './gradlew clean test jar --no-daemon --init-script init.gradle.spring-framework'
+          }
         }
       }
       post {

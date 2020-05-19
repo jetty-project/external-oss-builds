@@ -14,19 +14,13 @@ pipeline {
   stages {
     stage("Checkout SpringBoot"){
       steps{
+        stash name: 'init.gradle.spring-framework', includes: 'init.gradle.spring-framework'
         git url: "https://github.com/${GITHUB_ORG}/spring-boot.git", branch: "${SPRINGBOOT_BRANCH}"
       }
     }
     stage("Build SpringBoot"){
       steps{
-        withEnv(["JAVA_HOME=${ tool "$jdk" }","PATH+GRADLE=${ tool '6.4' }"]) {
-          withMaven( maven: 'maven3',
-                     jdk: "$jdk",
-                     publisherStrategy: 'EXPLICIT',
-                     mavenOpts: '-Xms4g -Xmx8g' ) {
-            sh "./mvnw -V -B -U clean install -Dmaven.test.failure.ignore=true -Dgradle.task=assemble -Ddep.jetty.version=${JETTY_VERSION}"
-          }
-        }
+          getBuild("${SPRINGBOOT_BRANCH}", "$jdk")
       }
       post {
         always {
@@ -38,6 +32,25 @@ pipeline {
           //publishHTML( [allowMissing: false, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/build/reports/tests/test/", reportFiles: 'index.html', reportName: 'Build Report', reportTitles: ''] )
 
         }
+      }
+    }
+  }
+}
+
+def getBuild(branch,jdk){
+  if(branch=='master'){
+    withEnv(["JAVA_HOME=${ tool "$jdk" }","PATH+GRADLE=${ tool '6.4' }"]) {
+      unstash name: 'init.gradle.spring-framework'
+      sh "ls -lrt"
+      sh './gradlew clean test jar --no-daemon --init-script init.gradle.spring-framework'
+    }
+  } else {
+    withEnv(["JAVA_HOME=${ tool "$jdk" }","PATH+GRADLE=${ tool '6.4' }"]) {
+      withMaven( maven: 'maven3',
+                 jdk: "$jdk",
+                 publisherStrategy: 'EXPLICIT',
+                 mavenOpts: '-Xms4g -Xmx8g' ) {
+        sh "./mvnw -V -B -U clean install -Dmaven.test.failure.ignore=true -Dgradle.task=assemble -Ddep.jetty.version=${JETTY_VERSION}"
       }
     }
   }
