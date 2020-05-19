@@ -2,7 +2,7 @@
 pipeline {
   agent { node { label 'linux' } }
   environment{
-    GRADLE_HOME = fileExists '$HOME/.gradle'
+    GRADLE_HOME = fileExists "$HOME/.gradle"
   }
   options {
     buildDiscarder logRotator( numToKeepStr: '20' )
