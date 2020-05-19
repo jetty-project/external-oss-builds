@@ -1,6 +1,9 @@
 #!groovy
 pipeline {
   agent { node { label 'linux' } }
+  environment{
+    GRADLE_HOME = fileExists '$HOME/.gradle'
+  }
   options {
     buildDiscarder logRotator( numToKeepStr: '20' )
   }
@@ -12,6 +15,12 @@ pipeline {
     string( defaultValue: '2.2.x', description: 'springboot branch', name: 'SPRINGBOOT_BRANCH' )
   }
   stages {
+    stage('Create Gradle home'){
+      when { expression { GRADLE_HOME == 'false' } }
+      steps {
+        sh "mkdir $HOME/.gradle"
+      }
+    }
     stage("Checkout SpringBoot"){
       steps{
         stash name: 'init.gradle.spring-framework', includes: 'init.gradle.spring-framework'

@@ -1,6 +1,9 @@
 #!groovy
 pipeline {
   agent { node { label 'linux' } }
+  environment{
+    GRADLE_HOME = fileExists '$HOME/.gradle'
+  }
   options {
     buildDiscarder logRotator( numToKeepStr: '20' )
   }
@@ -11,6 +14,12 @@ pipeline {
     string( defaultValue: '5.2.x', description: 'spring-framework branch', name: 'SPRINGFRAMEWORK_BRANCH' )
   }
   stages {
+    stage('Create Gradle home'){
+      when { expression { GRADLE_HOME == 'false' } }
+      steps {
+        sh "mkdir $HOME/.gradle"
+      }
+    }
     stage("Checkout SpringBoot"){
       steps{
         stash name: 'init.gradle.spring-framework', includes: 'init.gradle.spring-framework'
@@ -20,8 +29,6 @@ pipeline {
     stage("Build SpringFramework"){
       steps{
         configFileProvider([configFile(fileId: 'init.gradle', variable: 'INIT_GRADLE')]) {
-          // TODO test if exists
-          sh "mkdir $HOME/.gradle"
           sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
           withEnv( ["JAVA_HOME=${tool "$jdk"}", "PATH+GRADLE=${tool '6.4'}"] ) {
             unstash name: 'init.gradle.spring-framework'
