@@ -28,9 +28,9 @@ pipeline {
     }
     stage("Build SpringFramework"){
       steps{
-        configFileProvider([configFile(fileId: 'init.gradle', variable: 'INIT_GRADLE')]) {
-          sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
-          withEnv( ["JAVA_HOME=${tool "$jdk"}", "PATH+GRADLE=${tool '6.4'}"] ) {
+        withEnv( ["JAVA_HOME=${tool "$jdk"}", "PATH+GRADLE=${tool '6.4'}"] ) {
+          configFileProvider([configFile(fileId: 'init.gradle', variable: 'INIT_GRADLE')]) {
+            sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
             unstash name: 'init.gradle.spring-framework'
             sh "ls -lrt"
             sh './gradlew clean test jar --no-daemon --init-script init.gradle.spring-framework'

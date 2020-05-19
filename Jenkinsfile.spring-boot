@@ -48,11 +48,9 @@ pipeline {
 
 def getBuild(branch,jdk){
   if(branch=='master'){
-    configFileProvider([configFile(fileId: 'init.gradle', variable: 'INIT_GRADLE')]) {
-          // TODO test if exists
-          sh "mkdir $HOME/.gradle"
+    withEnv(["JAVA_HOM=${ tool "$jdk" }", "PATH+GRADE=${ tool '6.4' }"]) {
+      configFileProvider([configFile(fileId: 'init.gradle', variable: 'INIT_GRADLE')]) {
           sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
-          with Env(["JAVA_HOM=${ tool "$jdk" }", "PATH+GRADE=${ tool '6.4' }"]) {
           unstash name: 'init.gradle.spring-framework'
           sh "ls -lrt"
           sh './gradlew clean test jar --info --no-daemon --init-script init.gradle.spring-framework'
