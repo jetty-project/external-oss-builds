@@ -33,7 +33,7 @@ pipeline {
             sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
             unstash name: 'init.gradle.spring-framework'
             sh "ls -lrt"
-            sh './gradlew clean test jar --no-daemon --init-script init.gradle.spring-framework'
+            sh './gradlew clean test jar --info --no-daemon --init-script init.gradle.spring-framework'
           }
         }
       }
