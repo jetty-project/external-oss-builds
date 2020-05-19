@@ -1,15 +1,10 @@
 //initscript {
 allprojects {
-  configurations.all {
-    resolutionStrategy {
-      forcedModules = ['org.eclipse.jetty:jetty-bom:9.4.29-SNAPSHOT']
-      dependencySubstitution {
-        substitute module( "org.eclipse.jetty:jetty-bom" ) with module( "org.eclipse.jetty:jetty-bom:9.4.29-SNAPSHOT" )
-      }
-      eachDependency { DependencyResolveDetails details ->
-        //specifying a fixed version for all libraries with 'org.eclipse.jetty' group
-        if (details.requested.group == 'org.eclipse.jetty') {
-          details.useVersion '9.4.29-SNAPSHOT'
+  plugins.withId("io.spring.dependency-management") {
+    dependencyManagement {
+      resolutionStrategy {
+        dependencySubstitution {
+          substitute module( "org.eclipse.jetty:jetty-bom" ) with module( "org.eclipse.jetty:jetty-bom:9.4.29-SNAPSHOT" )
         }
       }
     }
