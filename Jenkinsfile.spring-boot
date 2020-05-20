@@ -38,7 +38,9 @@ pipeline {
           }
           junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
           archiveArtifacts artifacts: "spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/build/reports/**", allowEmptyArchive: true
-          publishHTML( [allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: "${env.WORKSPACE}/spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/build/reports/tests/test/", reportFiles: 'index.html', reportName: 'Build Report', reportTitles: ''] )
+          publishHTML( [allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true,
+                        reportDir: "buildSrc/build/reports/tests/test",
+                        reportFiles: 'index.html', reportName: 'Build Report', reportTitles: ''] )
 
         }
       }
