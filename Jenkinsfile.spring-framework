@@ -40,7 +40,7 @@ pipeline {
       post {
         always {
           script{
-            currentBuild.description = "Build SpringBoot branch ${SPRINGFRAMEWORK_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
+            currentBuild.description = "Build SpringFramework branch ${SPRINGFRAMEWORK_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
           }
           junit '**/build/test-results/test/*.xml'
         }
