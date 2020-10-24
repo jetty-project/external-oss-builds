@@ -3,6 +3,7 @@ allprojects {
     dependencyManagement {
       resolutionStrategy {
         dependencySubstitution {
+          // this version is placeholder value and replace with real values by gradle scripts
           substitute module( "org.eclipse.jetty:jetty-bom" ) with module( "org.eclipse.jetty:jetty-bom:9.4.29.v20200521" )
         }
       }

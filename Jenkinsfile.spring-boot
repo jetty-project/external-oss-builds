@@ -8,7 +8,7 @@ pipeline {
     buildDiscarder logRotator( numToKeepStr: '20' )
   }
   parameters {
-    string( defaultValue: '9.4.29-SNAPSHOT', description: 'Jetty version to use to build SpringBoot project',
+    string( defaultValue: '9.4.34-SNAPSHOT', description: 'Jetty version to use to build SpringBoot project',
             name: 'JETTY_VERSION' )
     string( defaultValue: 'jdk8', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
     string( defaultValue: 'spring-projects', description: 'github org to use', name: 'GITHUB_ORG' )
