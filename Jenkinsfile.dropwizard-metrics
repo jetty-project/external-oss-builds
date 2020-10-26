@@ -8,12 +8,12 @@ pipeline {
     string( defaultValue: '9.4.34-SNAPSHOT', description: 'Jetty version to use to build Dropwizard projects',
             name: 'JETTY_VERSION' )
     string( defaultValue: 'jdk8', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
-    string( defaultValue: 'master', description: 'Dropwizard branch', name: 'DROPWIZARD_BRANCH' )
+    string( defaultValue: 'release/4.1.x', description: 'Dropwizard Metrics branch', name: 'DROPWIZARD_METRICS_BRANCH' )
   }
   stages {
-    stage( "Build Dropwizard" ) {
+    stage( "Build Dropwizard Metrics" ) {
       steps {
-        git url: "https://github.com/dropwizard/dropwizard.git", branch: "${DROPWIZARD_BRANCH}"
+        git url: "https://github.com/dropwizard/metrics.git", branch: "${DROPWIZARD_METRICS_BRANCH}"
         withMaven( maven: 'maven3',
                    jdk: "$jdk",
                    publisherStrategy: 'EXPLICIT',
@@ -24,7 +24,7 @@ pipeline {
       post {
         always {
           script {
-            currentBuild.description = "Build Dropwizard branch ${DROPWIZARD_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
+            currentBuild.description = "Build Dropwizard Metrics branch ${DROPWIZARD_METRICS_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
           }
           junit testResults: '**/target/surefire-reports/*.xml'
         }
