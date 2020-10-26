@@ -11,7 +11,7 @@ pipeline {
     string( defaultValue: 'master', description: 'Airlift branch', name: 'AIRLIFT_BRANCH' )
   }
   stages {
-    stage("Checkout Airlifts"){
+    stage("Checkout Airlift"){
       steps{
         git url: "https://github.com/airlift/airlift.git", branch: "${AIRLIFT_BRANCH}"
       }
