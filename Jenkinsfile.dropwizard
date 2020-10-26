@@ -21,7 +21,7 @@ pipeline {
                        jdk: "$jdk",
                        publisherStrategy: 'EXPLICIT',
                        mavenOpts: '-Xms2g -Xmx6g' ) {
-              sh "mvn -V -B -U clean install -T3 -Dmaven.test.failure.ignore=true -fae -Djetty.version=${JETTY_VERSION}"
+              sh "mvn -V -B -U clean install -T3 -fae -Djetty.version=${JETTY_VERSION}" //  -Dmaven.test.failure.ignore=true
             }
           }
           post {
@@ -40,7 +40,7 @@ pipeline {
                        jdk: "$jdk",
                        publisherStrategy: 'EXPLICIT',
                        mavenOpts: '-Xms2g -Xmx6g' ) {
-              sh "mvn -V -B -U clean install -T3 -Dmaven.test.failure.ignore=true -fae -Djetty.version=${JETTY_VERSION}"
+              sh "mvn -V -B -U clean install -T3 -fae -Djetty.version=${JETTY_VERSION}" //  -Dmaven.test.failure.ignore=true
             }
           }
           post {
