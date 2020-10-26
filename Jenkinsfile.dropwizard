@@ -12,45 +12,44 @@ pipeline {
     string( defaultValue: 'master', description: 'Dropwizard branch', name: 'DROPWIZARD_BRANCH' )
   }
   stages {
-    stage ("Build Dropwizard and Dropwizard Metrics")
-    parallel {
-      stage("Build Dropwizard Metrics"){
-        steps{
-          git url: "https://https://github.com/dropwizard/metrics.git", branch: "${DROPWIZARD_METRICS_BRANCH}"
-          withMaven(
-                  maven: 'maven3',
-                  jdk: "$jdk",
-                  publisherStrategy: 'EXPLICIT',
-                  mavenOpts: '-Xms2g -Xmx6g') {
-            sh "mvn -V -B -U clean install -T3 -Dmaven.test.failure.ignore=true -fae -jetty.version=${JETTY_VERSION}"
-          }
-        }
-        post {
-          always {
-            script{
-              currentBuild.description = "Build Dropwizard branch ${DROPWIZARD_BRANCH} and Dropwizard Metrics branch ${DROPWIZARD_METRICS_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
+    stage( "Build Dropwizard and Dropwizard Metrics" ) {
+      parallel {
+        stage( "Build Dropwizard Metrics" ) {
+          steps {
+            git url: "https://https://github.com/dropwizard/metrics.git", branch: "${DROPWIZARD_METRICS_BRANCH}"
+            withMaven( maven: 'maven3',
+                       jdk: "$jdk",
+                       publisherStrategy: 'EXPLICIT',
+                       mavenOpts: '-Xms2g -Xmx6g' ) {
+              sh "mvn -V -B -U clean install -T3 -Dmaven.test.failure.ignore=true -fae -jetty.version=${JETTY_VERSION}"
             }
-            junit testResults: '**/target/surefire-reports/*.xml'
           }
-        }
-      }
-      stage("Build Dropwizard"){
-        steps{
-          git url: "https://github.com/dropwizard/dropwizard.git", branch: "${DROPWIZARD_BRANCH}"
-          withMaven(
-                  maven: 'maven3',
-                  jdk: "$jdk",
-                  publisherStrategy: 'EXPLICIT',
-                  mavenOpts: '-Xms2g -Xmx6g') {
-            sh "mvn -V -B -U clean install -T3 -Dmaven.test.failure.ignore=true -fae -jetty.version=${JETTY_VERSION}"
-          }
-        }
-        post {
-          always {
-            script{
-              currentBuild.description = "Build Dropwizard branch ${DROPWIZARD_BRANCH} and Dropwizard Metrics branch ${DROPWIZARD_METRICS_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
+          post {
+            always {
+              script {
+                currentBuild.description = "Build Dropwizard branch ${DROPWIZARD_BRANCH} and Dropwizard Metrics branch ${DROPWIZARD_METRICS_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
+              }
+              junit testResults: '**/target/surefire-reports/*.xml'
             }
-            junit testResults: '**/target/surefire-reports/*.xml'
+          }
+        }
+        stage( "Build Dropwizard" ) {
+          steps {
+            git url: "https://github.com/dropwizard/dropwizard.git", branch: "${DROPWIZARD_BRANCH}"
+            withMaven( maven: 'maven3',
+                       jdk: "$jdk",
+                       publisherStrategy: 'EXPLICIT',
+                       mavenOpts: '-Xms2g -Xmx6g' ) {
+              sh "mvn -V -B -U clean install -T3 -Dmaven.test.failure.ignore=true -fae -jetty.version=${JETTY_VERSION}"
+            }
+          }
+          post {
+            always {
+              script {
+                currentBuild.description = "Build Dropwizard branch ${DROPWIZARD_BRANCH} and Dropwizard Metrics branch ${DROPWIZARD_METRICS_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
+              }
+              junit testResults: '**/target/surefire-reports/*.xml'
+            }
           }
         }
       }
