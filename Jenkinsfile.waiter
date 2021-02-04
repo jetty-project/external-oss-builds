@@ -20,7 +20,7 @@ pipeline {
       steps{
         withEnv(["JAVA_HOME=${ tool "${jdk}" }"]) {
           sh "ls -lrt"
-          sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
+          sh "./waiter/bin/ci/run-integration-tests.sh composite eftest integration-fast"
         }
       }
       post {
