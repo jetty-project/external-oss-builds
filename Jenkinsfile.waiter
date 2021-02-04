@@ -11,6 +11,16 @@ pipeline {
     string( defaultValue: 'master', description: 'Waiter branch', name: 'WAITER_BRANCH' )
   }
   stages {
+    stage("Checkout Jet and build Jet"){
+      steps{
+        container('jetty-build') {
+          git url: "https://github.com/twosigma/jet.git", branch: "${WAITER_BRANCH}"
+          // TODO remove it when docker image have it
+          sh "apt update && apt install -y leiningen jq"
+          sh "lein install"
+        }
+      }
+    }
     stage("Checkout Waiter"){
       steps{
         git url: "https://github.com/twosigma/waiter.git", branch: "${WAITER_BRANCH}"
@@ -21,10 +31,11 @@ pipeline {
         container('jetty-build') {
           withEnv( ["JAVA_HOME=${tool "${jdk}"}",
                     "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin"] ) {
-            sh "ls -lrt"
-            sh "apt update && apt install -y leiningen jq"
-            dir("waiter"){
-              sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
+                // TODO remove it when docker image have it
+                sh "apt update && apt install -y leiningen jq"
+                dir("waiter"){
+                  sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
+                }
             }
           }
         }
