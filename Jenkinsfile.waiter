@@ -22,8 +22,10 @@ pipeline {
           withEnv( ["JAVA_HOME=${tool "${jdk}"}",
                     "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin"] ) {
             sh "ls -lrt"
-            sh "apt update && apt install -y leiningen jq"
-            sh "cd waiter && ./bin/ci/run-integration-tests.sh composite eftest integration-fast"
+            //sh "apt update && apt install -y leiningen jq"
+            dir("waiter"){
+              sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
+            }
           }
         }
       }
