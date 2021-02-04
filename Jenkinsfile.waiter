@@ -19,8 +19,8 @@ pipeline {
           sh "apt update && apt install -y leiningen jq netcat"
           configFileProvider(
                   [configFile(fileId: 'profiles.clj', variable: 'PROFILES_CLJ')]) {
-            sh "mkdir ~/m2/.lein"
-            sh "cp $PROFILES_CLJ ~/m2/.lein/"
+            sh "mkdir -p ~/.lein"
+            sh "cp $PROFILES_CLJ ~/.lein/"
             sh "lein install"
           }
         }
@@ -42,9 +42,10 @@ pipeline {
               configFileProvider(
                       [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS'),
                        configFile(fileId: 'profiles.clj', variable: 'PROFILES_CLJ')]) {
+                sh "mkdir -p ~/.m2"
                 sh "cp $GLOBAL_MVN_SETTINGS ~/.m2/settings.xml"
-                sh "mkdir ~/m2/.lein"
-                sh "cp $PROFILES_CLJ ~/m2/.lein/"
+                sh "mkdir -p ~/.lein"
+                sh "cp $PROFILES_CLJ ~/.lein/"
                 sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
               }
             }
