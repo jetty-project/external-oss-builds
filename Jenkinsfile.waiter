@@ -21,9 +21,7 @@ pipeline {
         withEnv(["JAVA_HOME=${ tool "${jdk}" }",
                 "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin"]) {
           sh "ls -lrt"
-          sh "cd waiter"
-          sh "pwd"
-          sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
+          sh "cd waiter && ./bin/ci/run-integration-tests.sh composite eftest integration-fast"
         }
       }
       post {
