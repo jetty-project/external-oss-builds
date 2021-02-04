@@ -31,23 +31,23 @@ pipeline {
         container('jetty-build') {
           withEnv( ["JAVA_HOME=${tool "${jdk}"}",
                     "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin"] ) {
-                // TODO remove it when docker image have it
-                sh "apt update && apt install -y leiningen jq"
-                dir("waiter"){
-                  sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
-                }
+            // TODO remove it when docker image have it
+            sh "apt update && apt install -y leiningen jq"
+            dir("waiter"){
+              sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
             }
           }
         }
       }
-      post {
-        always {
-          script{
-            currentBuild.description = "Build Waiter branch ${WAITER_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
-          }
-          junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
+    }
+    post {
+      always {
+        script{
+          currentBuild.description = "Build Waiter branch ${WAITER_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
         }
+        junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
       }
     }
   }
 }
+
