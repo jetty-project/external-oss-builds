@@ -1,0 +1,33 @@
+#!groovy
+pipeline {
+  agent { node { label 'linux' } }
+  options {
+    buildDiscarder logRotator( numToKeepStr: '20' )
+  }
+  parameters {
+    string( defaultValue: '9.4.34-SNAPSHOT', description: 'Jetty version to use to build Airlift project',
+            name: 'JETTY_VERSION' )
+    string( defaultValue: 'jdk8', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
+    string( defaultValue: 'master', description: 'Waiter branch', name: 'WAITER_BRANCH' )
+  }
+  stages {
+    stage("Checkout Waiter"){
+      steps{
+        git url: "https://github.com/twosigma/waiter.git", branch: "${WAITER_BRANCH}"
+      }
+    }
+    stage("Build Waiter"){
+      steps{
+        sh "apt install leiningen"
+      }
+      post {
+        always {
+          script{
+            currentBuild.description = "Build Waiter branch ${AIRLIFT_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
+          }
+          junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
+        }
+      }
+    }
+  }
+}
