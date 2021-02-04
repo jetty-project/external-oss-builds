@@ -18,7 +18,7 @@ pipeline {
     }
     stage("Build Waiter"){
       steps{
-        sh "apt -y install leiningen"
+        sh "apt -y install lein"
       }
       post {
         always {
