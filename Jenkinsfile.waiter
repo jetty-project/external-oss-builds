@@ -18,12 +18,12 @@ pipeline {
     }
     stage("Build Waiter"){
       steps{
-        sh "apt install leiningen"
+        sh "apt -y install leiningen"
       }
       post {
         always {
           script{
-            currentBuild.description = "Build Waiter branch ${AIRLIFT_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
+            currentBuild.description = "Build Waiter branch ${WAITER_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
           }
           junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
         }
