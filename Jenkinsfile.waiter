@@ -16,7 +16,7 @@ pipeline {
         container('jetty-build') {
           git url: "https://github.com/twosigma/jet.git", branch: "${WAITER_BRANCH}"
           // TODO remove it when docker image have it
-          sh "apt update && apt install -y leiningen jq"
+          sh "apt update && apt install -y leiningen jq netcat"
           sh "lein install"
         }
       }
@@ -32,7 +32,7 @@ pipeline {
           withEnv( ["JAVA_HOME=${tool "${jdk}"}",
                     "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin"] ) {
             // TODO remove it when docker image have it
-            sh "apt update && apt install -y leiningen jq"
+            sh "apt update && apt install -y leiningen jq netcat"
             dir("waiter"){
               sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
             }
