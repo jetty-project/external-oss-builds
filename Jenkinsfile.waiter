@@ -40,13 +40,13 @@ pipeline {
         }
       }
     }
-    post {
-      always {
-        script{
-          currentBuild.description = "Build Waiter branch ${WAITER_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
-        }
-        junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
+  }
+  post {
+    always {
+      script{
+        currentBuild.description = "Build Waiter branch ${WAITER_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
       }
+      junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
     }
   }
 }
