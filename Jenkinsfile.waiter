@@ -23,7 +23,7 @@ pipeline {
       }
     }
   }
-}
+
   stages {
     stage("Checkout Jet & build Jet"){
       steps{
