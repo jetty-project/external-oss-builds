@@ -9,6 +9,9 @@ pipeline {
             name: 'JETTY_VERSION' )
     string( defaultValue: 'jdk11', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
     string( defaultValue: 'master', description: 'Waiter branch', name: 'WAITER_BRANCH' )
+    string( defaultValue: 'twosigma', description: 'Waiter github org', name: 'WAITER_ORG' )
+    string( defaultValue: 'master', description: 'Jet branch', name: 'JET_BRANCH' )
+    string( defaultValue: 'twosigma', description: 'Jet github org', name: 'JET_ORG' )
   }
   tools {
     jdk "$jdk"
@@ -16,6 +19,7 @@ pipeline {
   }
   environment {
     PATH = "/root/.local/bin:$PATH"
+    JETTY_VERSION = "$JETTY_VERSION"
   }
 
   stages {
@@ -23,7 +27,7 @@ pipeline {
       steps {
         container( 'jetty-build' ) {
           withEnv( ["JAVA_HOME=${tool "${jdk}"}"]) {
-            git url: "https://github.com/twosigma/waiter.git", branch: "${WAITER_BRANCH}"
+            git url: "https://github.com/$WAITER_ORG/waiter.git", branch: "${WAITER_BRANCH}"
             dir( "waiter/bin/ci/" ) {
               sh "./install-lein"
             }
@@ -34,7 +38,7 @@ pipeline {
     stage("Checkout Jet & build Jet"){
       steps{
         container('jetty-build') {
-          git url: "https://github.com/twosigma/jet.git", branch: "${WAITER_BRANCH}"
+          git url: "https://github.com/$JET_ORG/jet.git", branch: "${JET_BRANCH}"
           // TODO remove it when docker image have it
           //sh "apt update && apt install -y leiningen jq netcat"
           withEnv( ["JAVA_HOME=${tool "${jdk}"}"]) {
@@ -43,7 +47,7 @@ pipeline {
               sh "mkdir -p ~/.lein"
               sh "cp $PROFILES_CLJ ~/.lein/profiles.clj"
               sh "cat $LEIN_HTTP_ENABLED >> ./project.clj"
-              sh "lein install"
+              sh "lein with-profile jetty-stage install"
             }
           }
         }
@@ -54,7 +58,7 @@ pipeline {
       steps{
         container('jetty-build') {
           withEnv( ["JAVA_HOME=${tool "${jdk}"}"]) {
-            git url: "https://github.com/twosigma/waiter.git", branch: "${WAITER_BRANCH}"
+            git url: "https://github.com/$WAITER_ORG/waiter.git", branch: "${WAITER_BRANCH}"
             //sh "apt update && apt install -y leiningen jq netcat"
             dir("waiter"){
               configFileProvider(
