@@ -5,7 +5,7 @@ pipeline {
     buildDiscarder logRotator( numToKeepStr: '20' )
   }
   parameters {
-    string( defaultValue: '9.4.37-SNAPSHOT', description: 'Jetty version to use to build Jet/Waiter project',
+    string( defaultValue: '9.4.36.v20210114', description: 'Jetty version to use to build Jet/Waiter project',
             name: 'JETTY_VERSION' )
     string( defaultValue: 'jdk11', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
     string( defaultValue: 'master', description: 'Waiter branch', name: 'WAITER_BRANCH' )
