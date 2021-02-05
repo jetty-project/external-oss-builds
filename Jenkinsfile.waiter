@@ -10,21 +10,22 @@ pipeline {
     string( defaultValue: 'jdk11', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
     string( defaultValue: 'master', description: 'Waiter branch', name: 'WAITER_BRANCH' )
   }
-  stage("Checkout Waiter & Install leiningen Waiter"){
-    steps{
-      container('jetty-build') {
-        withEnv( ["JAVA_HOME=${tool "${jdk}"}",
-                  "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin"] ) {
-          git url: "https://github.com/twosigma/waiter.git", branch: "${WAITER_BRANCH}"
-          dir("waiter/bin/ci/"){
-            sh "./install-lein"
+
+
+  stages {
+    stage("Checkout Waiter & Install leiningen Waiter") {
+      steps {
+        container( 'jetty-build' ) {
+          withEnv( ["JAVA_HOME=${tool "${jdk}"}",
+                    "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin"] ) {
+            git url: "https://github.com/twosigma/waiter.git", branch: "${WAITER_BRANCH}"
+            dir( "waiter/bin/ci/" ) {
+              sh "./install-lein"
+            }
           }
         }
       }
     }
-  }
-
-  stages {
     stage("Checkout Jet & build Jet"){
       steps{
         container('jetty-build') {
@@ -74,4 +75,3 @@ pipeline {
     }
   }
 }
-
