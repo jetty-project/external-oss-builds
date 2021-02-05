@@ -35,7 +35,7 @@ pipeline {
           configFileProvider(
                   [configFile(fileId: 'profiles.clj', variable: 'PROFILES_CLJ')]) {
             sh "mkdir -p ~/.lein"
-            sh "cp $PROFILES_CLJ ~/.lein/profiles.clj"
+            sh "cp $PROFILES_CLJ ~/.lein/repository-overrides.clj"
             sh "ls -lrt ~/.lein/"
             sh "lein install"
           }
@@ -57,7 +57,7 @@ pipeline {
                 sh "mkdir -p ~/.m2"
                 sh "cp $GLOBAL_MVN_SETTINGS ~/.m2/settings.xml"
                 sh "mkdir -p ~/.lein"
-                sh "cp $PROFILES_CLJ ~/.lein/profiles.clj"
+                sh "cp $PROFILES_CLJ ~/.lein/repository-overrides.clj"
                 sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
               }
             }
