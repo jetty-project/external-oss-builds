@@ -42,7 +42,7 @@ pipeline {
                                 configFile(fileId:'lein.http.enabled', variable: 'LEIN_HTTP_ENABLED' )]) {
               sh "mkdir -p ~/.lein"
               sh "cp $PROFILES_CLJ ~/.lein/profiles.clj"
-              sh "cat $LEIN_HTTP_ENABLED >> project.clj"
+              sh "cat $LEIN_HTTP_ENABLED >> ./project.clj"
               sh "lein install"
             }
           }
@@ -59,11 +59,13 @@ pipeline {
             dir("waiter"){
               configFileProvider(
                       [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS'),
+                       configFile(fileId:'lein.http.enabled', variable: 'LEIN_HTTP_ENABLED' )
                        configFile(fileId: 'profiles.clj', variable: 'PROFILES_CLJ')]) {
                 sh "mkdir -p ~/.m2"
                 sh "cp $GLOBAL_MVN_SETTINGS ~/.m2/settings.xml"
                 sh "mkdir -p ~/.lein"
                 sh "cp $PROFILES_CLJ ~/.lein/profiles.clj"
+                sh "cat $LEIN_HTTP_ENABLED >> ./project.clj"
                 sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
               }
             }
