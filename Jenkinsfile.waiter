@@ -10,8 +10,22 @@ pipeline {
     string( defaultValue: 'jdk11', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
     string( defaultValue: 'master', description: 'Waiter branch', name: 'WAITER_BRANCH' )
   }
+  stage("Checkout Waiter & Install leiningen Waiter"){
+    steps{
+      container('jetty-build') {
+        withEnv( ["JAVA_HOME=${tool "${jdk}"}",
+                  "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin"] ) {
+          git url: "https://github.com/twosigma/waiter.git", branch: "${WAITER_BRANCH}"
+          dir("waiter/bin/ci/"){
+            sh "./install-lein"
+          }
+        }
+      }
+    }
+  }
+}
   stages {
-    stage("Checkout Jet and build Jet"){
+    stage("Checkout Jet & build Jet"){
       steps{
         container('jetty-build') {
           git url: "https://github.com/twosigma/jet.git", branch: "${WAITER_BRANCH}"
@@ -27,18 +41,14 @@ pipeline {
         }
       }
     }
-    stage("Checkout Waiter"){
-      steps{
-        git url: "https://github.com/twosigma/waiter.git", branch: "${WAITER_BRANCH}"
-      }
-    }
-    stage("Build Waiter"){
+
+    stage("Checkout Waiter & Build Waiter"){
       steps{
         container('jetty-build') {
           withEnv( ["JAVA_HOME=${tool "${jdk}"}",
                     "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin"] ) {
-            // TODO remove it when docker image have it
-            sh "apt update && apt install -y leiningen jq netcat"
+            git url: "https://github.com/twosigma/waiter.git", branch: "${WAITER_BRANCH}"
+            //sh "apt update && apt install -y leiningen jq netcat"
             dir("waiter"){
               configFileProvider(
                       [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS'),
