@@ -20,7 +20,7 @@ pipeline {
                     "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin"] ) {
             git url: "https://github.com/twosigma/waiter.git", branch: "${WAITER_BRANCH}"
             dir( "waiter/bin/ci/" ) {
-              sh "./install-lein && cp ./lein /usr/local/bin"
+              sh "./install-lein"
             }
           }
         }
@@ -36,7 +36,7 @@ pipeline {
                   [configFile(fileId: 'profiles.clj', variable: 'PROFILES_CLJ')]) {
             sh "mkdir -p ~/.lein"
             sh "cp $PROFILES_CLJ ~/.lein/profiles.clj"
-            sh "/usr/local/bin/lein install"
+            sh "/root/.local/bin/lein install"
           }
         }
       }
@@ -47,7 +47,7 @@ pipeline {
         container('jetty-build') {
           withEnv( ["JAVA_HOME=${tool "${jdk}"}",
                     "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin",
-                    "PATH=/usr/local/bin:${env.PATH}"]) {
+                    "PATH=/root/.local/bin:${env.PATH}"]) {
             git url: "https://github.com/twosigma/waiter.git", branch: "${WAITER_BRANCH}"
             sh "apt update && apt install -y leiningen jq netcat"
             dir("waiter"){
