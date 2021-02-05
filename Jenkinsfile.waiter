@@ -66,6 +66,8 @@ pipeline {
                 sh "mkdir -p ~/.lein"
                 sh "cp $PROFILES_CLJ ~/.lein/profiles.clj"
                 sh "cat $LEIN_HTTP_ENABLED >> ./project.clj"
+                sh "cat $LEIN_HTTP_ENABLED ../containers/test-apps/jwks-server/project.clj"
+                sh "cat $LEIN_HTTP_ENABLED ../containers/test-apps/jwks-server/project.clj"
                 sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
               }
             }
