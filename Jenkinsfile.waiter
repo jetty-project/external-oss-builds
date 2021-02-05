@@ -20,8 +20,7 @@ pipeline {
                     "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin"] ) {
             git url: "https://github.com/twosigma/waiter.git", branch: "${WAITER_BRANCH}"
             dir( "waiter/bin/ci/" ) {
-              sh "./install-lein"
-              sh "cp ./lein /usr/local/bin"
+              sh "./install-lein && cp ./lein /usr/local/bin"
             }
           }
         }
@@ -32,12 +31,12 @@ pipeline {
         container('jetty-build') {
           git url: "https://github.com/twosigma/jet.git", branch: "${WAITER_BRANCH}"
           // TODO remove it when docker image have it
-          //sh "apt update && apt install -y leiningen jq netcat"
+          sh "apt update && apt install -y leiningen jq netcat"
           configFileProvider(
                   [configFile(fileId: 'profiles.clj', variable: 'PROFILES_CLJ')]) {
             sh "mkdir -p ~/.lein"
             sh "cp $PROFILES_CLJ ~/.lein/profiles.clj"
-            sh "lein install"
+            sh "/usr/local/bin/lein install"
           }
         }
       }
@@ -47,9 +46,10 @@ pipeline {
       steps{
         container('jetty-build') {
           withEnv( ["JAVA_HOME=${tool "${jdk}"}",
-                    "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin"] ) {
+                    "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin"],
+                    "PATH=/usr/local/bin:${env.PATH}") {
             git url: "https://github.com/twosigma/waiter.git", branch: "${WAITER_BRANCH}"
-            //sh "apt update && apt install -y leiningen jq netcat"
+            sh "apt update && apt install -y leiningen jq netcat"
             dir("waiter"){
               configFileProvider(
                       [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS'),
