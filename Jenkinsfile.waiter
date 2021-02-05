@@ -46,8 +46,8 @@ pipeline {
       steps{
         container('jetty-build') {
           withEnv( ["JAVA_HOME=${tool "${jdk}"}",
-                    "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin"],
-                    "PATH=/usr/local/bin:${env.PATH}") {
+                    "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool "maven3"}/bin",
+                    "PATH=/usr/local/bin:${env.PATH}"]) {
             git url: "https://github.com/twosigma/waiter.git", branch: "${WAITER_BRANCH}"
             sh "apt update && apt install -y leiningen jq netcat"
             dir("waiter"){
