@@ -49,27 +49,27 @@ pipeline {
 }
 
 def getBuild(branch,jdk){
-  if(branch=='master'){
-    withEnv(["JAVA_HOM=${ tool "$jdk" }", "PATH+GRADE=${ tool '6.4' }"]) {
-      configFileProvider([configFile(fileId: 'init.gradle', variable: 'INIT_GRADLE')]) {
-          sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
-          unstash name: 'init.gradle.spring-framework'
-        script{
-          def text = readFile "init.gradle.spring-framework"
-          text = text.replaceAll("9.4.29.v20200521", "${JETTY_VERSION}")
-          writeFile file:"init.gradle.spring-framework.modified", text: text
-        }
-        sh "cat init.gradle.spring-framework.modified"
-          sh './gradlew clean test jar --info --no-daemon --init-script init.gradle.spring-framework'
-        }
-      }
-  } else {
+  if(branch=='2.2.x'){
     withEnv(["JAVA_HOME=${ tool "$jdk" }","PATH+GRADLE=${ tool '6.4' }"]) {
       withMaven( maven: 'maven3',
                  jdk: "$jdk",
                  publisherStrategy: 'EXPLICIT',
                  mavenOpts: '-Xms4g -Xmx8g' ) {
         sh "./mvnw -V -B -U clean install -Dmaven.test.failure.ignore=true -Dgradle.task=assemble -Ddep.jetty.version=${JETTY_VERSION}"
+      }
+    }
+  } else {
+    withEnv(["JAVA_HOM=${ tool "$jdk" }", "PATH+GRADE=${ tool '6.4' }"]) {
+      configFileProvider([configFile(fileId: 'init.gradle', variable: 'INIT_GRADLE')]) {
+        sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
+        unstash name: 'init.gradle.spring-framework'
+        script{
+          def text = readFile "init.gradle.spring-framework"
+          text = text.replaceAll("9.4.29.v20200521", "${JETTY_VERSION}")
+          writeFile file:"init.gradle.spring-framework.modified", text: text
+        }
+        sh "cat init.gradle.spring-framework.modified"
+        sh './gradlew clean test jar --info --no-daemon --init-script init.gradle.spring-framework'
       }
     }
   }
