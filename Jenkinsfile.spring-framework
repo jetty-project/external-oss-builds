@@ -10,7 +10,7 @@ pipeline {
   parameters {
     string( defaultValue: '9.4.34-SNAPSHOT', description: 'Jetty version to use to build SpringBoot project',
             name: 'JETTY_VERSION' )
-    string( defaultValue: 'jdk8', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
+    string( defaultValue: 'jdk8', description: 'JDK to use (jdk8,jdk11,jdk16)', name: 'JDK' )
     string( defaultValue: '5.2.x', description: 'spring-framework branch', name: 'SPRINGFRAMEWORK_BRANCH' )
   }
   stages {
@@ -35,6 +35,7 @@ pipeline {
             script{
               def text = readFile "init.gradle.spring-framework"
               text = text.replaceAll("9.4.29.v20200521", "${JETTY_VERSION}")
+              text = text.replaceAll("jetty-reactive-httpclient:1.1.6", "jetty-reactive-httpclient:${JETTY_REACTIVE_HTTPCLIENT_VERSION}")
               writeFile file:"init.gradle.spring-framework.modified", text: text
             }
             sh "cat init.gradle.spring-framework.modified"
