@@ -12,7 +12,7 @@ pipeline {
             name: 'JETTY_VERSION' )
     string( defaultValue: 'jdk8', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
     string( defaultValue: 'spring-projects', description: 'github org to use', name: 'GITHUB_ORG' )
-    string( defaultValue: '2.2.x', description: 'springboot branch', name: 'SPRINGBOOT_BRANCH' )
+    string( defaultValue: '2.3.x', description: 'springboot branch', name: 'SPRINGBOOT_BRANCH' )
   }
   stages {
     stage('Create Gradle home'){
