@@ -55,7 +55,7 @@ def getBuild(branch,jdk){
                  jdk: "$jdk",
                  publisherStrategy: 'EXPLICIT',
                  mavenOpts: '-Xms4g -Xmx8g' ) {
-        sh "./mvnw -V -B -U clean install -Dmaven.test.failure.ignore=true -Dgradle.task=assemble -Ddep.jetty.version=${JETTY_VERSION}"
+        sh "./mvnw -V -B -U clean install -Dmaven.test.failure.ignore=true -Dgradle.task=assemble -Djetty.version=${JETTY_VERSION}"
       }
     }
   } else {
