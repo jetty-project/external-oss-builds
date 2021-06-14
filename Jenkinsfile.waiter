@@ -65,7 +65,6 @@ pipeline {
               sh "./install-lein"
               sh "apt update"
               sh "apt install -y python3-pip jq"
-              sh "apt upgrade -y"
             }
             configFileProvider(
                     [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS'),
