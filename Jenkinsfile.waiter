@@ -87,7 +87,6 @@ pipeline {
                   sh "cat $LEIN_HTTP_ENABLED >> ../containers/test-apps/jwks-server/project.clj"
   //                sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
                   //sh "./bin/ci/run-integration-tests.sh"
-                }
               }
             }
           }
