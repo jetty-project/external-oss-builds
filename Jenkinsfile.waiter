@@ -8,7 +8,7 @@ pipeline {
     string( defaultValue: '9.4.36.v20210114', description: 'Jetty version to use to build Jet/Waiter project',
             name: 'JETTY_VERSION' )
     string( defaultValue: 'jdk11', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
-    string( defaultValue: 'master', description: 'Waiter branch', name: 'WAITER_BRANCH' )
+    string( defaultValue: 'jetty-upgrade-check-branch', description: 'Waiter branch', name: 'WAITER_BRANCH' )
     string( defaultValue: 'twosigma', description: 'Waiter github org', name: 'WAITER_ORG' )
     string( defaultValue: 'master', description: 'Jet branch', name: 'JET_BRANCH' )
     string( defaultValue: 'twosigma', description: 'Jet github org', name: 'JET_ORG' )
@@ -35,44 +35,45 @@ pipeline {
         }
       }
     }
-    stage("Checkout Jet & build Jet"){
-      steps{
-        container('jetty-build') {
-          git url: "https://github.com/$JET_ORG/jet.git", branch: "${JET_BRANCH}"
-          // TODO remove it when docker image have it
-          //sh "apt update && apt install -y leiningen jq netcat"
-          withEnv( ["JAVA_HOME=${tool "${jdk}"}"]) {
-            configFileProvider([configFile(fileId: 'profiles.clj', variable: 'PROFILES_CLJ' ),
-                                configFile(fileId:'lein.http.enabled', variable: 'LEIN_HTTP_ENABLED' )]) {
-              sh "mkdir -p ~/.lein"
-              sh "cp $PROFILES_CLJ ~/.lein/profiles.clj"
-              sh "cat $LEIN_HTTP_ENABLED >> ./project.clj"
-              sh "lein with-profile jetty-stage install"
-            }
-          }
-        }
-      }
-    }
+//    stage("Checkout Jet & build Jet"){
+//      steps{
+//        container('jetty-build') {
+//          git url: "https://github.com/$JET_ORG/jet.git", branch: "${JET_BRANCH}"
+//          // TODO remove it when docker image have it
+//          //sh "apt update && apt install -y leiningen jq netcat"
+//          withEnv( ["JAVA_HOME=${tool "${jdk}"}"]) {
+//            configFileProvider([configFile(fileId: 'profiles.clj', variable: 'PROFILES_CLJ' ),
+//                                configFile(fileId:'lein.http.enabled', variable: 'LEIN_HTTP_ENABLED' )]) {
+//              sh "mkdir -p ~/.lein"
+//              sh "cp $PROFILES_CLJ ~/.lein/profiles.clj"
+//              sh "cat $LEIN_HTTP_ENABLED >> ./project.clj"
+//              sh "lein with-profile jetty-stage install"
+//            }
+//          }
+//        }
+//      }
+//    }
 
     stage("Checkout Waiter & Build Waiter"){
       steps{
         container('jetty-build') {
-          withEnv( ["JAVA_HOME=${tool "${jdk}"}"]) {
+          withEnv( ["JAVA_HOME=${tool "${jdk}"}",WAITER_JETTY_VERSION="${JETTY_VERSION}"]) {
             git url: "https://github.com/$WAITER_ORG/waiter.git", branch: "${WAITER_BRANCH}"
             //sh "apt update && apt install -y leiningen jq netcat"
-            dir("waiter"){
+            dir("cli"){
               configFileProvider(
                       [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS'),
                        configFile(fileId:'lein.http.enabled', variable: 'LEIN_HTTP_ENABLED' ),
                        configFile(fileId: 'profiles.clj', variable: 'PROFILES_CLJ')]) {
-                sh "mkdir -p ~/.m2"
-                sh "cp $GLOBAL_MVN_SETTINGS ~/.m2/settings.xml"
-                sh "mkdir -p ~/.lein"
-                sh "cp $PROFILES_CLJ ~/.lein/profiles.clj"
-                sh "cat $LEIN_HTTP_ENABLED >> ./project.clj"
-                sh "cat $LEIN_HTTP_ENABLED >> ../containers/test-apps/jwks-server/project.clj"
-                sh "cat $LEIN_HTTP_ENABLED >> ../containers/test-apps/jwks-server/project.clj"
-                sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
+//                sh "mkdir -p ~/.m2"
+//                sh "cp $GLOBAL_MVN_SETTINGS ~/.m2/settings.xml"
+//                sh "mkdir -p ~/.lein"
+//                sh "cp $PROFILES_CLJ ~/.lein/profiles.clj"
+//                sh "cat $LEIN_HTTP_ENABLED >> ./project.clj"
+//                sh "cat $LEIN_HTTP_ENABLED >> ../containers/test-apps/jwks-server/project.clj"
+//                sh "cat $LEIN_HTTP_ENABLED >> ../containers/test-apps/jwks-server/project.clj"
+//                sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
+                sh "./bin/ci/run-integration-tests.sh"
               }
             }
           }
