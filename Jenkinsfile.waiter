@@ -63,6 +63,8 @@ pipeline {
             //sh "apt update && apt install -y leiningen jq netcat"
             dir( "waiter/bin/ci/" ) {
               sh "./install-lein"
+              sh "apt update"
+              sh "apt install -y python3-pip jq"
             }
             configFileProvider(
                     [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS'),
@@ -73,8 +75,6 @@ pipeline {
                 sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
               }
               dir("cli"){
-                sh "apt update"
-                sh "apt install -y python3-pip"
                 sh "pip install -e ."
                 sh "pip install -r integration/requirements.txt"
 
