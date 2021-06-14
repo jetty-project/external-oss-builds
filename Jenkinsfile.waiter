@@ -20,6 +20,7 @@ pipeline {
   environment {
     PATH = "/root/.local/bin:$PATH"
     JETTY_VERSION = "$JETTY_VERSION"
+    WAITER_JETTY_VERSION = "${WAITER_BRANCH}"
   }
 
   stages {
@@ -57,7 +58,7 @@ pipeline {
     stage("Checkout Waiter & Build Waiter"){
       steps{
         container('jetty-build') {
-          withEnv( ["JAVA_HOME=${tool "${jdk}"}",WAITER_JETTY_VERSION="${JETTY_VERSION}"]) {
+          withEnv( ["JAVA_HOME=${tool "${jdk}"}"]) {
             git url: "https://github.com/$WAITER_ORG/waiter.git", branch: "${WAITER_BRANCH}"
             //sh "apt update && apt install -y leiningen jq netcat"
             dir("cli"){
