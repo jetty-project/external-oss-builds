@@ -24,18 +24,18 @@ pipeline {
   }
 
   stages {
-    stage("Checkout Waiter & Install leiningen Waiter") {
-      steps {
-        container( 'jetty-build' ) {
-          withEnv( ["JAVA_HOME=${tool "${jdk}"}"]) {
-            git url: "https://github.com/$WAITER_ORG/waiter.git", branch: "${WAITER_BRANCH}"
-            dir( "waiter/bin/ci/" ) {
-              sh "./install-lein"
-            }
-          }
-        }
-      }
-    }
+//    stage("Checkout Waiter & Install leiningen Waiter") {
+//      steps {
+//        container( 'jetty-build' ) {
+//          withEnv( ["JAVA_HOME=${tool "${jdk}"}"]) {
+//            git url: "https://github.com/$WAITER_ORG/waiter.git", branch: "${WAITER_BRANCH}"
+//            dir( "waiter/bin/ci/" ) {
+//              sh "./install-lein"
+//            }
+//          }
+//        }
+//      }
+//    }
 //    stage("Checkout Jet & build Jet"){
 //      steps{
 //        container('jetty-build') {
@@ -62,6 +62,8 @@ pipeline {
             git url: "https://github.com/$WAITER_ORG/waiter.git", branch: "${WAITER_BRANCH}"
             //sh "apt update && apt install -y leiningen jq netcat"
             dir("cli"){
+              sh "pip install -e ."
+              sh "pip install -r integration/requirements.txt"
               configFileProvider(
                       [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS'),
                        configFile(fileId:'lein.http.enabled', variable: 'LEIN_HTTP_ENABLED' ),
