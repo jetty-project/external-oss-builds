@@ -64,6 +64,9 @@ pipeline {
             dir( "waiter/bin/ci/" ) {
               sh "./install-lein"
             }
+            dir("waiter") {
+              sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
+            }
             dir("cli"){
               sh "apt update"
               sh "apt install -y python3-pip"
@@ -81,7 +84,7 @@ pipeline {
                 sh "cat $LEIN_HTTP_ENABLED >> ../containers/test-apps/jwks-server/project.clj"
                 sh "cat $LEIN_HTTP_ENABLED >> ../containers/test-apps/jwks-server/project.clj"
 //                sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
-                sh "./bin/ci/run-integration-tests.sh"
+                //sh "./bin/ci/run-integration-tests.sh"
               }
             }
           }
