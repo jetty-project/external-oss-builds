@@ -61,6 +61,9 @@ pipeline {
           withEnv( ["JAVA_HOME=${tool "${jdk}"}"]) {
             git url: "https://github.com/$WAITER_ORG/waiter.git", branch: "${WAITER_BRANCH}"
             //sh "apt update && apt install -y leiningen jq netcat"
+            dir( "waiter/bin/ci/" ) {
+              sh "./install-lein"
+            }
             dir("cli"){
               sh "apt update"
               sh "apt install -y python3-pip"
