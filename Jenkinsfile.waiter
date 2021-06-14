@@ -10,8 +10,8 @@ pipeline {
     string( defaultValue: 'jdk11', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
     string( defaultValue: 'jetty-upgrade-check-branch', description: 'Waiter branch', name: 'WAITER_BRANCH' )
     string( defaultValue: 'twosigma', description: 'Waiter github org', name: 'WAITER_ORG' )
-    string( defaultValue: 'master', description: 'Jet branch', name: 'JET_BRANCH' )
-    string( defaultValue: 'twosigma', description: 'Jet github org', name: 'JET_ORG' )
+    //string( defaultValue: 'master', description: 'Jet branch', name: 'JET_BRANCH' )
+    //string( defaultValue: 'twosigma', description: 'Jet github org', name: 'JET_ORG' )
   }
   tools {
     jdk "$jdk"
@@ -62,6 +62,7 @@ pipeline {
             git url: "https://github.com/$WAITER_ORG/waiter.git", branch: "${WAITER_BRANCH}"
             //sh "apt update && apt install -y leiningen jq netcat"
             dir("cli"){
+              sh "apt update"
               sh "apt install -y python3-pip"
               sh "pip install -e ."
               sh "pip install -r integration/requirements.txt"
