@@ -58,7 +58,7 @@ pipeline {
     stage("Checkout Waiter & Build Waiter"){
       steps{
         container('jetty-build') {
-          withEnv( ["JAVA_HOME=${tool "${jdk}"}"]) {
+          withEnv( ["JAVA_HOME=${tool "${jdk}"}","WAITER_JETTY_VERSION = ${JETTY_VERSION}"]) {
             git url: "https://github.com/$WAITER_ORG/waiter.git", branch: "${WAITER_BRANCH}"
             //sh "apt update && apt install -y leiningen jq netcat"
             dir( "waiter/bin/ci/" ) {
