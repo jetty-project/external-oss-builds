@@ -61,11 +61,11 @@ pipeline {
           withEnv( ["JAVA_HOME=${tool "${jdk}"}","WAITER_JETTY_VERSION = ${JETTY_VERSION}"]) {
             git url: "https://github.com/$WAITER_ORG/waiter.git", branch: "${WAITER_BRANCH}"
             //sh "apt update && apt install -y leiningen jq netcat"
-//            dir( "waiter/bin/ci/" ) {
-//              sh "./install-lein"
-//              sh "apt update"
-//              sh "apt install -y python3-pip jq"
-//            }
+            dir( "waiter/bin/ci/" ) {
+              sh "./install-lein"
+              sh "apt update"
+              sh "apt install -y python3-pip jq"
+            }
             configFileProvider(
                     [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS'),
                      configFile(fileId:'lein.http.enabled', variable: 'LEIN_HTTP_ENABLED' ),
@@ -89,7 +89,6 @@ pipeline {
               dir("cli"){
                 sh "pip install -e ."
                 sh "pip install -r integration/requirements.txt"
-  //                sh "./bin/ci/run-integration-tests.sh composite eftest integration-fast"
                   //sh "./bin/ci/run-integration-tests.sh"
               }
             }
