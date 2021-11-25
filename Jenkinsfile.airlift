@@ -5,7 +5,7 @@ pipeline {
     buildDiscarder logRotator( numToKeepStr: '20' )
   }
   parameters {
-    string( defaultValue: '9.4.34-SNAPSHOT', description: 'Jetty version to use to build Airlift project',
+    string( defaultValue: '9.4.44.v20210927', description: 'Jetty version to use to build Airlift project',
             name: 'JETTY_VERSION' )
     string( defaultValue: 'jdk11', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
     string( defaultValue: 'master', description: 'Airlift branch', name: 'AIRLIFT_BRANCH' )
