@@ -17,15 +17,19 @@ pipeline {
       }
     }
     stage("Build Airlift"){
-      steps{        
-        withEnv(["JAVA_HOME=${ tool "maven3" }",
-               "PATH+MAVEN=${ tool "$jdk" }/bin:${tool "$mvnName"}/bin",
-               "MAVEN_OPTS=-Xms2g -Xmx6g -Djava.awt.headless=true"]) {
-          configFileProvider(
-                [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS')]) {          
-          sh "mvn -V -B -U clean install -T3 -Dmaven.test.failure.ignore=true -fae -Ddep.jetty.version=${JETTY_VERSION}"
-          }
-        }  
+      container('jetty-build') {
+        timeout( time: 120, unit: 'MINUTES' ) {      
+          steps{        
+            withEnv(["JAVA_HOME=${ tool "maven3" }",
+                   "PATH+MAVEN=${ tool "$jdk" }/bin:${tool "$mvnName"}/bin",
+                   "MAVEN_OPTS=-Xms2g -Xmx6g -Djava.awt.headless=true"]) {
+              configFileProvider(
+                    [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS')]) {          
+              sh "mvn -V -B -U clean install -T3 -Dmaven.test.failure.ignore=true -fae -Ddep.jetty.version=${JETTY_VERSION}"
+              }
+           }  
+         }
+        }    
       }
       post {
         always {
