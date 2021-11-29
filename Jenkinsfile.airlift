@@ -21,8 +21,8 @@ pipeline {
       steps{        
         container('jetty-build') {
           timeout( time: 120, unit: 'MINUTES' ) {              
-            withEnv(["JAVA_HOME=${ tool "maven3" }",
-                   "PATH+MAVEN=${ tool "$jdk" }/bin:${tool "$mvnName"}/bin",
+            withEnv(["JAVA_HOME=${ tool "$jdk" }",
+                   "PATH+MAVEN=${ tool "$jdk" }/bin:${tool "maven3"}/bin",
                    "MAVEN_OPTS=-Xms2g -Xmx6g -Djava.awt.headless=true"]) {
               configFileProvider(
                     [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS')]) {          
