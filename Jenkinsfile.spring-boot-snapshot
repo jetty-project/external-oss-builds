@@ -1,0 +1,53 @@
+#!groovy
+
+pipeline {
+  agent { node { label 'linux' } }
+  triggers {
+    cron '@daily'
+  }
+  options {
+    buildDiscarder logRotator( numToKeepStr: '30' )
+  }
+
+  stages {
+    stage("Find Jetty 9.4.x Version"){
+      steps{
+        container('jetty-build') {
+          sh "wget -q -O jetty-9.4.x.pom https://raw.githubusercontent.com/eclipse/jetty.project/jetty-9.4.x/pom.xml"
+          script {
+            def model = readMavenPom file: 'jetty-9.4.x.pom'
+            jetty_version = model.getVersion()
+          }
+          echo "Jetty version $jetty_version"
+        }
+      }
+    }
+    stage("Build"){
+      matrix {
+        agent any
+        axes {
+          axis {
+            name 'SPRING_BOOT_BRANCH'
+            values '2.3.x', '2.4.x', '2.5.x'
+          }
+        }
+        stages {
+          stage('Build SpringBoot') {
+            steps {
+              echo "Build Jetty Version $jetty_version - SPRING_BOOT_BRANCH: ${SPRING_BOOT_BRANCH}"
+              buildIt("$jetty_version", "${SPRING_BOOT_BRANCH}")
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+def buildIt(jettyVersion, springBranch){
+  def built = build( job: 'spring-boot-build-jetty', propagate: false,
+          parameters: [string( name: 'JETTY_VERSION', value: "${jettyVersion}" ),
+                       string( name: 'SPRINGBOOT_BRANCH', value: "${springBranch}" ),
+                       string( name: 'JDK', value: "jdk11" )] )
+}
+
