@@ -1,0 +1,45 @@
+#!groovy
+
+pipeline {
+  agent { node { label 'linux' } }
+  triggers {
+    cron '@daily'
+  }
+  options {
+    buildDiscarder logRotator( numToKeepStr: '30' )
+  }
+
+  stages {
+    stage("Cometd 5.0.x"){
+      steps{
+        container('jetty-build') {
+          buildIt("jetty-9.4.x", "5.0.x", "jdk11")
+        }
+      }
+    }
+    stage("Cometd 6.0.x"){
+      steps{
+        container('jetty-build') {
+          buildIt("jetty-10.0.x", "6.0.x", "jdk11")
+        }
+      }
+    }
+    stage("Cometd 7.0.x"){
+      steps{
+        container('jetty-build') {
+          buildIt("jetty-11.0.x", "7.0.x", "jdk17")
+        }
+      }
+    }
+  }
+}
+
+def buildIt(jettyBranch, cometdBranch, jdk){
+  sh "wget -q -O $jettyBranch.pom https://raw.githubusercontent.com/eclipse/jetty.project/$jettyBranch/pom.xml"
+  script {
+    def model = readMavenPom file: "jettyBranch.pom"
+    jetty_version = model.getVersion()
+  }
+  echo "Jetty version $jetty_version"
+  git url: "https://github.com/cometd/cometd.git", branch: "$cometdBranch"
+}
