@@ -35,9 +35,9 @@ pipeline {
 }
 
 def buildIt(jettyBranch, cometdBranch, jdk){
-  sh "wget -q -O $jettyBranch.pom https://raw.githubusercontent.com/eclipse/jetty.project/$jettyBranch/pom.xml"
+  sh "wget -q -O $jettyBranch https://raw.githubusercontent.com/eclipse/jetty.project/$jettyBranch/pom.xml"
   script {
-    def model = readMavenPom file: "jettyBranch.pom"
+    def model = readMavenPom file: "$jettyBranch"
     jetty_version = model.getVersion()
   }
   echo "Jetty version $jetty_version"
