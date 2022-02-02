@@ -45,7 +45,7 @@ pipeline {
 }
 
 def buildIt(jettyVersion, springBranch){
-  def built = build( job: 'spring-boot-build-jetty', propagate: false,
+  def built = build( job: 'spring-boot-build-jetty', propagate: true,
           parameters: [string( name: 'JETTY_VERSION', value: "${jettyVersion}" ),
                        string( name: 'SPRINGBOOT_BRANCH', value: "${springBranch}" ),
                        string( name: 'JDK', value: "jdk11" )] )
