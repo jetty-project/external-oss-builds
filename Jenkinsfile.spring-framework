@@ -41,7 +41,7 @@ pipeline {
               writeFile file:"init.gradle.spring-framework.modified", text: text
             }
             sh "cat init.gradle.spring-framework.modified"
-            sh './gradlew clean test jar --info --no-daemon --init-script init.gradle.spring-framework.modified'
+            sh './gradlew build --info --no-daemon --init-script init.gradle.spring-framework.modified'
           }
         }
       }
