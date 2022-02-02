@@ -5,6 +5,9 @@ pipeline {
   triggers {
     cron '@daily'
   }
+  tools {
+    maven 'maven3'
+  }
   options {
     buildDiscarder logRotator( numToKeepStr: '30' )
   }
@@ -45,7 +48,7 @@ def buildIt(jettyBranch, cometdBranch, jdk){
   script {
     try {
       withEnv(["JAVA_HOME=${ tool "$jdk" }",
-               "PATH+MAVEN=${ tool "$jdk" }/bin:${tool maven3}/bin",
+               "PATH+MAVEN=${ tool "$jdk" }/bin",
                "MAVEN_OPTS=-Xms2g -Xmx4g -Djava.awt.headless=true"]) {
         configFileProvider(
                 [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS')]) {
