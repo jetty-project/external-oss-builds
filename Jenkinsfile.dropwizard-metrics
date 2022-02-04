@@ -25,7 +25,7 @@ pipeline {
       post {
         always {
           script {
-            currentBuild.description = "Build Dropwizard Metrics branch ${DROPWIZARD_METRICS_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
+            currentBuild.description = "Build Dropwizard Metrics branch ${DROPWIZARD_METRICS_BRANCH}, Jetty9 ${JETTY9_VERSION}, Jetty10 ${JETTY10_VERSION}, Jetty11 ${JETTY11_VERSION}, jdk ${jdk}"
           }
           junit testResults: '**/target/surefire-reports/*.xml'
         }
