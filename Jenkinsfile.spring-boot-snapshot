@@ -23,26 +23,20 @@ pipeline {
       }
     }
     stage("Build"){
-      parallel {
-        stage("Jetty ${jetty_version} Springboot 2.3.x") {
-          agent { label "linux" }
-          steps {
-            echo "Build Jetty Version $jetty_version - SPRING_BOOT_BRANCH: 2.3.x"
-            buildIt("$jetty_version", "2.3.x")
+      matrix {
+        agent any
+        axes {
+          axis {
+            name 'SPRING_BOOT_BRANCH'
+            values '2.3.x', '2.4.x', '2.5.x'
           }
         }
-        stage("Jetty ${jetty_version} Springboot 2.4.x") {
-          agent { label "linux" }
-          steps {
-            echo "Build Jetty Version $jetty_version - SPRING_BOOT_BRANCH: 2.4.x"
-            buildIt("$jetty_version", "2.4.x")
-          }
-        }
-        stage("Jetty ${jetty_version} Springboot 2.5.x") {
-          agent { label "linux" }
-          steps {
-            echo "Build Jetty Version $jetty_version - SPRING_BOOT_BRANCH: 2.5.x"
-            buildIt("$jetty_version", "2.5.x")
+        stages {
+          stage('Build SpringBoot') {
+            steps {
+              echo "Build Jetty Version $jetty_version - SPRING_BOOT_BRANCH: ${SPRING_BOOT_BRANCH}"
+              buildIt("$jetty_version", "${SPRING_BOOT_BRANCH}")
+            }
           }
         }
       }
