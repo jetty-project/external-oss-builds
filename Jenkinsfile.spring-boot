@@ -36,7 +36,7 @@ pipeline {
           script{
             currentBuild.description = "Build SpringBoot branch ${GITHUB_ORG}/${SPRINGBOOT_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
           }
-          junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
+          junit testResults: '**/build/test-results/test/*.xml', allowEmptyResults: true
           archiveArtifacts artifacts: "spring-boot-project/spring-boot-tools/spring-boot-gradle-plugin/build/reports/**", allowEmptyArchive: true
           publishHTML( [allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true,
                         reportDir: "buildSrc/build/reports/tests/test",
