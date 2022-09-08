@@ -9,6 +9,7 @@ pipeline {
     string( defaultValue: '10.0.7', description: 'Jetty 10 version to use to build Dropwizard projects', name: 'JETTY10_VERSION' )
     string( defaultValue: '11.0.7', description: 'Jetty 11 version to use to build Dropwizard projects', name: 'JETTY11_VERSION' )
     string( defaultValue: 'jdk11', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
+    string( defaultValue: '2.0.0', description: 'Slf4j version', name: 'SLF4J_VERSION')
     string( defaultValue: 'release/4.2.x', description: 'Dropwizard Metrics branch', name: 'DROPWIZARD_METRICS_BRANCH' )
   }
   stages {
@@ -19,7 +20,7 @@ pipeline {
                    jdk: "$jdk",
                    publisherStrategy: 'EXPLICIT',
                    mavenOpts: '-Xms2g -Xmx6g' ) {
-          sh "mvn -V -B -U clean install -T3 -fae -Djetty9.version=${JETTY9_VERSION} -Djetty10.version=${JETTY10_VERSION} -Djetty11.version=${JETTY11_VERSION} -Dmaven.test.failure.ignore=true"
+          sh "mvn -V -B -U clean install -T3 -fae -Dslf4j.version=${SLF4J_VERSION} -Djetty9.version=${JETTY9_VERSION} -Djetty10.version=${JETTY10_VERSION} -Djetty11.version=${JETTY11_VERSION} -Dmaven.test.failure.ignore=true"
         }
       }
       post {
