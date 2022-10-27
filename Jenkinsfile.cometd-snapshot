@@ -9,7 +9,7 @@ pipeline {
     maven 'maven3'
   }
   options {
-    buildDiscarder logRotator( numToKeepStr: '30' )
+    buildDiscarder logRotator( numToKeepStr: '5' )
   }
 
   stages {
@@ -44,7 +44,11 @@ def buildIt(jettyBranch, cometdBranch, jdk){
     jetty_version = model.getVersion()
   }
   echo "Jetty version $jetty_version"
-  git url: "https://github.com/cometd/cometd.git", branch: "$cometdBranch"
+  //git url: "https://github.com/cometd/cometd.git", branch: "$cometdBranch"
+  checkout([$class: 'GitSCM',
+            branches: [[name: "*/$cometdBranch"]],
+            extensions: [[$class: 'CloneOption', depth: 1, noTags: true, shallow: true]],
+            userRemoteConfigs: [[url: 'https://github.com/cometd/cometd.git']]])  
   script {
     try {
       withEnv(["JAVA_HOME=${ tool "$jdk" }",
