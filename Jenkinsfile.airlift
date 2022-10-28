@@ -5,15 +5,19 @@ pipeline {
     buildDiscarder logRotator( numToKeepStr: '20' )
   }
   parameters {
-    string( defaultValue: '9.4.44.v20210927', description: 'Jetty version to use to build Airlift project',
+    string( defaultValue: '9.4.49.v20220914', description: 'Jetty version to use to build Airlift project',
             name: 'JETTY_VERSION' )
-    string( defaultValue: 'jdk11', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
+    string( defaultValue: 'jdk17', description: 'JDK to use (jdk8,jdk11,jdk17)', name: 'JDK' )
     string( defaultValue: 'master', description: 'Airlift branch', name: 'AIRLIFT_BRANCH' )
   }
   stages {
     stage("Checkout Airlift"){
       steps{
-        git url: "https://github.com/airlift/airlift.git", branch: "${AIRLIFT_BRANCH}"
+        //git url: "https://github.com/airlift/airlift.git", branch: "${AIRLIFT_BRANCH}"
+        checkout([$class: 'GitSCM',
+                  branches: [[name: "*/$AIRLIFT_BRANCH"]],
+                  extensions: [[$class: 'CloneOption', depth: 1, noTags: true, shallow: true]],
+                  userRemoteConfigs: [[url: 'https://github.com/airlift/airlift.git']]])        
       }
     }
     stage("Build Airlift"){
