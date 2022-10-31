@@ -25,7 +25,10 @@ pipeline {
     stage("Checkout SpringBoot"){
       steps{
         stash name: 'init.gradle.spring-framework', includes: 'init.gradle.spring-framework'
-        git url: "https://github.com/spring-projects/spring-framework.git", branch: "${SPRINGFRAMEWORK_BRANCH}"
+        checkout([$class: 'GitSCM',
+                  branches: [[name: "*/$SPRINGFRAMEWORK_BRANCH"]],
+                  extensions: [[$class: 'CloneOption', depth: 1, noTags: true, shallow: true]],
+                  userRemoteConfigs: [[url: 'https://github.com/spring-projects/spring-framework.git']]])                   
       }
     }
     stage("Build SpringFramework"){
