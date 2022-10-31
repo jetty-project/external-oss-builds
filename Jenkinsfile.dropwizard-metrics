@@ -19,12 +19,14 @@ pipeline {
                   branches: [[name: "*/$DROPWIZARD_METRICS_BRANCH"]],
                   extensions: [[$class: 'CloneOption', depth: 1, noTags: true, shallow: true]],
                   userRemoteConfigs: [[url: 'https://github.com/dropwizard/metrics.git']]])                    
-        withMaven( maven: 'maven3',
-                   jdk: "$jdk",
-                   publisherStrategy: 'EXPLICIT',
-                   mavenOpts: '-Xms2g -Xmx6g' ) {
-          sh "mvn -V -B -U clean install -T3 -fae -Dslf4j.version=${SLF4J_VERSION} -Djetty9.version=${JETTY9_VERSION} -Djetty10.version=${JETTY10_VERSION} -Djetty11.version=${JETTY11_VERSION} -Dmaven.test.failure.ignore=true"
-        }
+        withEnv(["JAVA_HOME=${ tool "$jdk" }",
+               "PATH+MAVEN=${ tool "$jdk" }/bin:${tool "maven3"}/bin",
+               "MAVEN_OPTS=-Xms2g -Xmx4g -Djava.awt.headless=true"]) {
+          configFileProvider(
+                  [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS')]) {
+            sh "mvn -s $GLOBAL_MVN_SETTINGS -V -B -U clean install -T3 -fae -Dslf4j.version=${SLF4J_VERSION} -Djetty9.version=${JETTY9_VERSION} -Djetty10.version=${JETTY10_VERSION} -Djetty11.version=${JETTY11_VERSION} -Dmaven.test.failure.ignore=true"
+          }
+        }  
       }
       post {
         always {
