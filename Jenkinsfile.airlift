@@ -13,7 +13,6 @@ pipeline {
   stages {
     stage("Checkout Airlift"){
       steps{
-        //git url: "https://github.com/airlift/airlift.git", branch: "${AIRLIFT_BRANCH}"
         checkout([$class: 'GitSCM',
                   branches: [[name: "*/$AIRLIFT_BRANCH"]],
                   extensions: [[$class: 'CloneOption', depth: 1, noTags: true, shallow: true]],
@@ -22,17 +21,15 @@ pipeline {
     }
     stage("Build Airlift"){
       steps{        
-        container('jetty-build') {
-          timeout( time: 120, unit: 'MINUTES' ) {              
-            withEnv(["JAVA_HOME=${ tool "$jdk" }",
-                   "PATH+MAVEN=${ tool "$jdk" }/bin:${tool "maven3"}/bin",
-                   "MAVEN_OPTS=-Xms2g -Xmx6g -Djava.awt.headless=true"]) {
-              configFileProvider(
-                    [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS')]) {          
-              sh "mvn -V -B -U clean install -T3 -Dmaven.test.failure.ignore=true -fae -Ddep.jetty.version=${JETTY_VERSION}"
-              }
-           }  
-         }
+        timeout( time: 120, unit: 'MINUTES' ) {              
+          withEnv(["JAVA_HOME=${ tool "$jdk" }",
+                 "PATH+MAVEN=${ tool "$jdk" }/bin:${tool "maven3"}/bin",
+                 "MAVEN_OPTS=-Xms2g -Xmx6g -Djava.awt.headless=true"]) {
+            configFileProvider(
+                  [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS')]) {          
+            sh "mvn -V -B -U clean install -T3 -Dmaven.test.failure.ignore=true -fae -Ddep.jetty.version=${JETTY_VERSION}"
+            }
+         }  
         }    
       }
       post {
