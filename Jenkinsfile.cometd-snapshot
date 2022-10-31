@@ -15,23 +15,17 @@ pipeline {
   stages {
     stage("Cometd 5.0.x"){
       steps{
-        container('jetty-build') {
-          buildIt("jetty-9.4.x", "5.0.x", "jdk11")
-        }
+        buildIt("jetty-9.4.x", "5.0.x", "jdk11")
       }
     }
     stage("Cometd 6.0.x"){
       steps{
-        container('jetty-build') {
-          buildIt("jetty-10.0.x", "6.0.x", "jdk11")
-        }
+        buildIt("jetty-10.0.x", "6.0.x", "jdk11")
       }
     }
     stage("Cometd 7.0.x"){
       steps{
-        container('jetty-build') {
-          buildIt("jetty-11.0.x", "7.0.x", "jdk17")
-        }
+        buildIt("jetty-11.0.x", "7.0.x", "jdk17")
       }
     }
   }
