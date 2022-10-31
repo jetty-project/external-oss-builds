@@ -15,7 +15,10 @@ pipeline {
   stages {
     stage( "Build Dropwizard Metrics" ) {
       steps {
-        git url: "https://github.com/dropwizard/metrics.git", branch: "${DROPWIZARD_METRICS_BRANCH}"
+        checkout([$class: 'GitSCM',
+                  branches: [[name: "*/$DROPWIZARD_METRICS_BRANCH"]],
+                  extensions: [[$class: 'CloneOption', depth: 1, noTags: true, shallow: true]],
+                  userRemoteConfigs: [[url: 'https://github.com/dropwizard/metrics.git']]])                    
         withMaven( maven: 'maven3',
                    jdk: "$jdk",
                    publisherStrategy: 'EXPLICIT',
