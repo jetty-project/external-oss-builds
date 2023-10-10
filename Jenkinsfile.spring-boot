@@ -8,11 +8,11 @@ pipeline {
     buildDiscarder logRotator( numToKeepStr: '20' )
   }
   parameters {
-    string( defaultValue: '9.4.46.v20220331', description: 'Jetty version to use to build SpringBoot project',
+    string( defaultValue: '12.0.3-SNAPSHOT', description: 'Jetty version to use to build SpringBoot project',
             name: 'JETTY_VERSION' )
-    string( defaultValue: 'jdk8', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
+    string( defaultValue: 'jdk17', description: 'JDK to use (jdk8,jdk11,jdk17,jdk21)', name: 'JDK' )
     string( defaultValue: 'spring-projects', description: 'github org to use', name: 'GITHUB_ORG' )
-    string( defaultValue: '2.4.x', description: 'springboot branch', name: 'SPRINGBOOT_BRANCH' )
+    string( defaultValue: 'main', description: 'springboot branch', name: 'SPRINGBOOT_BRANCH' )
   }
   stages {
     stage('Create Gradle home'){
@@ -62,7 +62,7 @@ def getBuild(branch,jdk){
       }
     }
   } else {
-    withEnv(["JAVA_HOM=${ tool "$jdk" }", "PATH+GRADE=${ tool '6.4' }"]) {
+    withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH+GRADE=${ tool '6.4' }"]) {
       configFileProvider([configFile(fileId: 'init.gradle', variable: 'INIT_GRADLE')]) {
         sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
         unstash name: 'init.gradle.spring-framework'
