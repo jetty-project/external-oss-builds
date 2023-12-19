@@ -5,7 +5,7 @@ pipeline {
     buildDiscarder logRotator( numToKeepStr: '20' )
   }
   parameters {
-    string( defaultValue: '10.0.18', description: 'Jetty version to use to build Dropwizard projects',
+    string( defaultValue: '11.0.18', description: 'Jetty version to use to build Dropwizard projects',
             name: 'JETTY_VERSION' )
     string( defaultValue: 'jdk11', description: 'JDK to use (jdk8,jdk11,jdk14)', name: 'JDK' )
     string( defaultValue: 'release/4.0.x', description: 'Dropwizard branch', name: 'DROPWIZARD_BRANCH' )
