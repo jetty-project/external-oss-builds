@@ -12,7 +12,7 @@ pipeline {
             name: 'JETTY_VERSION' )
     string( defaultValue: 'jdk17', description: 'JDK to use (jdk8,jdk11,jdk16)', name: 'JDK' )
     string( defaultValue: 'main', description: 'spring-framework branch', name: 'MICROMETER_BRANCH' )
-    string( defaultValue: 'spring-projects', description: 'spring-framework github org', name: 'MICROMETER_ORG' )
+    string( defaultValue: 'micrometer-metrics', description: 'micrometer-metrics github org', name: 'MICROMETER_ORG' )
   }
   stages {
     stage('Create Gradle home'){
