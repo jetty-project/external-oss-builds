@@ -10,7 +10,7 @@ pipeline {
   parameters {
     string( defaultValue: '12.0.0-SNAPSHOT', description: 'Jetty version to use to build micrometer project',
             name: 'JETTY_VERSION' )
-    string( defaultValue: 'jdk17', description: 'JDK to use (jdk8,jdk11,jdk16)', name: 'JDK' )
+    string( defaultValue: 'jdk11', description: 'JDK to use (jdk8,jdk11,jdk16)', name: 'JDK' )
     string( defaultValue: 'main', description: 'spring-framework branch', name: 'MICROMETER_BRANCH' )
     string( defaultValue: 'micrometer-metrics', description: 'micrometer-metrics github org', name: 'MICROMETER_ORG' )
   }
