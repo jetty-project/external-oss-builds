@@ -37,7 +37,7 @@ pipeline {
             sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
             sh 'ls -lrt'
             sh 'cat gradle/libs.versions.toml'
-            sh './gradlew build --info --no-daemon --continue' // --init-script init.gradle.spring-framework.modified'
+            sh './gradlew build --info --no-daemon --no-build-cache ' // --continue --init-script init.gradle.spring-framework.modified'
           }
         }
       }
