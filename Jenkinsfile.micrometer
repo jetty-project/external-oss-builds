@@ -30,12 +30,13 @@ pipeline {
                   userRemoteConfigs: [[url: 'https://github.com/$MICROMETER_ORG/micrometer.git']]])
       }
     }
-    stage("Build SpringFramework"){
+    stage("Build Micrometer"){
       steps{
         withEnv( ["JAVA_HOME=${tool "$jdk"}", "PATH+GRADLE=${tool '6.4'}"] ) {
           configFileProvider([configFile(fileId: 'init.gradle', variable: 'INIT_GRADLE')]) {
             sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
             sh 'ls -lrt'
+            sh 'cat gradle/libs.versions.toml'
             sh './gradlew build --info --no-daemon --continue' // --init-script init.gradle.spring-framework.modified'
           }
         }
