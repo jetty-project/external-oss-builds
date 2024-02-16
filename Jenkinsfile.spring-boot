@@ -72,7 +72,7 @@ def getBuild(branch,jdk){
           writeFile file:"init.gradle.spring-framework.modified", text: text
         }
         sh "cat init.gradle.spring-framework.modified"
-        sh './gradlew build --info --no-daemon --continue --init-script init.gradle.spring-framework'
+        sh './gradlew build --info --no-daemon --continue --no-build-cache --init-script init.gradle.spring-framework'
       }
     }
   }
