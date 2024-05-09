@@ -1,0 +1,47 @@
+#!groovy
+pipeline {
+  agent { node { label 'linux' } }
+  options {
+    buildDiscarder logRotator( numToKeepStr: '20' )
+  }
+  parameters {
+    string( defaultValue: '12.0.9', description: 'Jetty version to use to build Appengine project',
+            name: 'JETTY_VERSION' )
+    string( defaultValue: '9.4.54.v20240208', description: 'Jetty 9.x version to use to build Appengine project',
+            name: 'JETTY_9_x_VERSION' )
+    string( defaultValue: 'jdk21', description: 'JDK to use (jdk8,jdk11,jdk17)', name: 'JDK' )
+    string( defaultValue: 'master', description: 'Appengine branch', name: 'APPENGINE_BRANCH' )
+  }
+  stages {
+    stage("Checkout Airlift"){
+      steps{
+        checkout([$class: 'GitSCM',
+                  branches: [[name: "*/$APPENGINE_BRANCH"]],
+                  extensions: [[$class: 'CloneOption', depth: 1, noTags: true, shallow: true]],
+                  userRemoteConfigs: [[url: 'https://github.com/GoogleCloudPlatform/appengine-java-standard.git']]])        
+      }
+    }
+    stage("Build Airlift"){
+      steps{        
+        timeout( time: 120, unit: 'MINUTES' ) {              
+          withEnv(["JAVA_HOME=${ tool "$jdk" }",
+                 "PATH+MAVEN=${ tool "$jdk" }/bin:${tool "maven3"}/bin",
+                 "MAVEN_OPTS=-Xms2g -Xmx6g -Djava.awt.headless=true"]) {
+            configFileProvider(
+                  [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS')]) {          
+            sh "mvn -s $GLOBAL_MVN_SETTINGS -V -B -U clean install -T3 -Dmaven.test.failure.ignore=true -fae -Djetty12.version=${JETTY_VERSION} -Djetty.version=${JETTY_9_x_VERSION}"
+            }
+         }  
+        }    
+      }
+      post {
+        always {
+          script{
+            currentBuild.description = "Build Appengine branch ${APPENGINE_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
+          }
+          junit testResults: '**/target/surefire-reports/*.xml'
+        }
+      }
+    }
+  }
+}
