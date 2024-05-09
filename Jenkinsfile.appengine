@@ -10,7 +10,7 @@ pipeline {
     string( defaultValue: '9.4.54.v20240208', description: 'Jetty 9.x version to use to build Appengine project',
             name: 'JETTY_9_x_VERSION' )
     string( defaultValue: 'jdk21', description: 'JDK to use (jdk8,jdk11,jdk17)', name: 'JDK' )
-    string( defaultValue: 'master', description: 'Appengine branch', name: 'APPENGINE_BRANCH' )
+    string( defaultValue: 'main', description: 'Appengine branch', name: 'APPENGINE_BRANCH' )
   }
   stages {
     stage("Checkout Airlift"){
