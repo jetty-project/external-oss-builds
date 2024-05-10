@@ -13,7 +13,7 @@ pipeline {
     string( defaultValue: 'main', description: 'Appengine branch', name: 'APPENGINE_BRANCH' )
   }
   stages {
-    stage("Checkout Airlift"){
+    stage("Checkout Appengine"){
       steps{
         checkout([$class: 'GitSCM',
                   branches: [[name: "*/$APPENGINE_BRANCH"]],
@@ -21,7 +21,7 @@ pipeline {
                   userRemoteConfigs: [[url: 'https://github.com/GoogleCloudPlatform/appengine-java-standard.git']]])        
       }
     }
-    stage("Build Airlift"){
+    stage("Build Apppengine"){
       steps{        
         timeout( time: 120, unit: 'MINUTES' ) {              
           withEnv(["JAVA_HOME=${ tool "$jdk" }",
