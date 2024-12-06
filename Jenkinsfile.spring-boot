@@ -53,7 +53,7 @@ pipeline {
 
 def getBuild(branch,jdk){
   if(branch=='2.2.x'){
-    withEnv(["JAVA_HOME=${ tool "$jdk" }","PATH+GRADLE=${ tool '6.4' }"]) {
+    withEnv(["JAVA_HOME=${ tool "$jdk" }"]) {
       withMaven( maven: 'maven3',
                  jdk: "$jdk",
                  publisherStrategy: 'EXPLICIT',
