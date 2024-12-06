@@ -62,7 +62,7 @@ def getBuild(branch,jdk){
       }
     }
   } else {
-    withEnv(["JAVA_HOME=${ tool "$jdk" }", "PATH+GRADE=${ tool '6.4' }"]) {
+    withEnv(["JAVA_HOME=${ tool "$jdk" }"]) {
       configFileProvider([configFile(fileId: 'init.gradle', variable: 'INIT_GRADLE')]) {
         sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
         unstash name: 'init.gradle.spring-framework'
