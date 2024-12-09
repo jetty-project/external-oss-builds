@@ -9,11 +9,11 @@ allprojects {
         }
       }
       repositories {
+        gradlePluginPortal()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/groups/jetty-with-staging/" }
         maven { url "https://repo.spring.io/libs-spring-framework-build" }
         maven { url "https://plugins.gradle.org/m2/" }
-        gradlePluginPortal()
       }
     }
   }
