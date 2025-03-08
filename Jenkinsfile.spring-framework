@@ -40,7 +40,7 @@ pipeline {
             unstash name: 'init.gradle.spring-framework'
             script{
               def text = readFile "init.gradle.spring-framework"
-              text = text.replaceAll("9.4.29.v20200521", "${JETTY_VERSION}")
+              text = text.replaceAll("12.0.17", "${JETTY_VERSION}")
               text = text.replaceAll("jetty-reactive-httpclient:1.1.6", "jetty-reactive-httpclient:${JETTY_REACTIVE_HTTPCLIENT_VERSION}")
               writeFile file:"init.gradle.spring-framework.modified", text: text
             }
