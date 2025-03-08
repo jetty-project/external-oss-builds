@@ -68,7 +68,7 @@ def getBuild(branch,jdk){
         unstash name: 'init.gradle.spring-framework'
         script{
           def text = readFile "init.gradle.spring-framework"
-          text = text.replaceAll("9.4.29.v20200521", "${JETTY_VERSION}")
+          text = text.replaceAll("12.0.17", "${JETTY_VERSION}")
           writeFile file:"init.gradle.spring-framework.modified", text: text
         }
         sh "cat init.gradle.spring-framework.modified"
