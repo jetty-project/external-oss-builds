@@ -38,11 +38,7 @@ pipeline {
           configFileProvider([configFile(fileId: 'init.gradle', variable: 'INIT_GRADLE')]) {
             sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
             unstash name: 'init.gradle.spring-framework'
-            script{
-              writeFile file:"init.gradle.spring-framework.modified", text: text
-            }
-            sh "cat init.gradle.spring-framework.modified"
-            sh "./gradlew build --info --no-daemon --no-build-cache --init-script init.gradle.spring-framework.modified -Djetty.version=${JETTY_VERSION} -Djetty.reactive.httpclient=${JETTY_REACTIVE_HTTPCLIENT_VERSION}"
+            sh "./gradlew build --info --no-daemon --no-build-cache --init-script init.gradle.spring-framework -Djetty.version=${JETTY_VERSION} -Djetty.reactive.httpclient=${JETTY_REACTIVE_HTTPCLIENT_VERSION}"
           }
         }
       }
