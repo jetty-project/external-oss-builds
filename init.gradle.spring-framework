@@ -20,5 +20,12 @@ allprojects {
         includeGroupByRegex("org.eclipse.jetty.*")
       }
     }
+    maven {
+      url "https://oss.sonatype.org/content/repositories/jetty-snapshots/"
+      content {
+        includeGroupByRegex("org.eclipse.jetty.*")
+      }
+    }
+
   }
 }
