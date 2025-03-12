@@ -10,7 +10,7 @@ pipeline {
   parameters {
     string( defaultValue: '12.0.0-SNAPSHOT', description: 'Jetty version to use to build SpringBoot project',
             name: 'JETTY_VERSION' )
-    string( defaultValue: '1.1.8', description: 'Jetty Reactive HttpClient version to use in the build',
+    string( defaultValue: '4.0.9', description: 'Jetty Reactive HttpClient version to use in the build',
             name: 'JETTY_REACTIVE_HTTPCLIENT_VERSION' )    
     string( defaultValue: 'jdk17', description: 'JDK to use (jdk8,jdk11,jdk16)', name: 'JDK' )
     string( defaultValue: 'main', description: 'spring-framework branch', name: 'SPRINGFRAMEWORK_BRANCH' )
@@ -39,13 +39,10 @@ pipeline {
             sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
             unstash name: 'init.gradle.spring-framework'
             script{
-              def text = readFile "init.gradle.spring-framework"
-              text = text.replaceAll("12.0.17", "${JETTY_VERSION}")
-              text = text.replaceAll("jetty-reactive-httpclient:1.1.6", "jetty-reactive-httpclient:${JETTY_REACTIVE_HTTPCLIENT_VERSION}")
               writeFile file:"init.gradle.spring-framework.modified", text: text
             }
             sh "cat init.gradle.spring-framework.modified"
-            sh './gradlew build --info --no-daemon --no-build-cache --init-script init.gradle.spring-framework.modified'
+            sh "./gradlew build --info --no-daemon --no-build-cache --init-script init.gradle.spring-framework.modified -Djetty.version=${JETTY_VERSION} -Djetty.reactive.httpclient=${JETTY_REACTIVE_HTTPCLIENT_VERSION}"
           }
         }
       }

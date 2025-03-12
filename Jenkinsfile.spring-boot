@@ -8,11 +8,13 @@ pipeline {
     buildDiscarder logRotator( numToKeepStr: '20' )
   }
   parameters {
-    string( defaultValue: '12.0.3-SNAPSHOT', description: 'Jetty version to use to build SpringBoot project',
+    string( defaultValue: '12.0.16', description: 'Jetty version to use to build SpringBoot project',
             name: 'JETTY_VERSION' )
-    string( defaultValue: 'jdk17', description: 'JDK to use (jdk8,jdk11,jdk17,jdk21)', name: 'JDK' )
+    string( defaultValue: 'jdk21', description: 'JDK to use (jdk8,jdk11,jdk17,jdk21)', name: 'JDK' )
     string( defaultValue: 'spring-projects', description: 'github org to use', name: 'GITHUB_ORG' )
     string( defaultValue: 'main', description: 'springboot branch', name: 'SPRINGBOOT_BRANCH' )
+    string( defaultValue: '4.0.9', description: 'Jetty Reactive HttpClient version to use in the build',
+            name: 'JETTY_REACTIVE_HTTPCLIENT_VERSION' )
   }
   stages {
     stage('Create Gradle home'){
@@ -66,13 +68,8 @@ def getBuild(branch,jdk){
       configFileProvider([configFile(fileId: 'init.gradle', variable: 'INIT_GRADLE')]) {
         sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
         unstash name: 'init.gradle.spring-framework'
-        script{
-          def text = readFile "init.gradle.spring-framework"
-          text = text.replaceAll("12.0.17", "${JETTY_VERSION}")
-          writeFile file:"init.gradle.spring-framework.modified", text: text
-        }
         sh "cat init.gradle.spring-framework.modified"
-        sh './gradlew build --info --no-daemon --no-build-cache --init-script init.gradle.spring-framework'
+        sh "./gradlew build --info --no-daemon --no-build-cache --init-script init.gradle.spring-framework -Djetty.version=${JETTY_VERSION} -Djetty.reactive.httpclient=${JETTY_REACTIVE_HTTPCLIENT_VERSION}"
       }
     }
   }
