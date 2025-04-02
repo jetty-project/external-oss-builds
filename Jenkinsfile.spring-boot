@@ -67,7 +67,7 @@ def getBuild(branch,jdk){
     withEnv(["JAVA_HOME=${ tool "$jdk" }"]) {
       configFileProvider([configFile(fileId: 'init.gradle', variable: 'INIT_GRADLE')]) {
         sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
-        sh 'echo "org.gradle.jvmargs=-Xmx4g -Xms1g -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8" >> gradle.properties'
+        sh 'echo "org.gradle.jvmargs=-Xmx8g -Xms4g -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8" >> gradle.properties'
         unstash name: 'init.gradle.spring-framework'
         sh "./gradlew build --info --no-daemon --no-build-cache --init-script init.gradle.spring-framework -Djetty.version=${JETTY_VERSION} -Djetty.reactive.httpclient=${JETTY_REACTIVE_HTTPCLIENT_VERSION}"
       }
