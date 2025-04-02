@@ -28,10 +28,7 @@ allprojects {
     }
 
   }
-}
-
-apply plugin: 'java'
-
-test {
-    exclude '**/**AvailabilityProbesAutoConfigurationTests**'
+  tasks.withType(Test).configureEach {
+    exclude '**/**AvailabilityProbesAutoConfigurationTests.class'  // Excludes AvailabilityProbesAutoConfigurationTests
+  }
 }
