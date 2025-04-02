@@ -30,6 +30,8 @@ allprojects {
   }
 }
 
+apply plugin: 'java'
+
 test {
     exclude '**/**AvailabilityProbesAutoConfigurationTests**'
 }
