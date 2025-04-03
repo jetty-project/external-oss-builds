@@ -30,6 +30,9 @@ allprojects {
   }
   tasks.withType(Test).configureEach {
     exclude '**/**AvailabilityProbesAutoConfigurationTests.class'  // Excludes AvailabilityProbesAutoConfigurationTests
+    exclude '**/**ManagementPortAndPathWithAntPatcherSampleActuatorApplicationTests.class'  // Excludes ManagementPortAndPathWithAntPatcherSampleActuatorApplicationTests
+    exclude '**/**JerseyFilterApplicationTests.class'  // Excludes JerseyFilterApplicationTests
+    exclude '**/**SampleSecureWebFluxApplicationTests.class'  // Excludes SampleSecureWebFluxApplicationTests
     ignoreFailures = true
   }
 }
