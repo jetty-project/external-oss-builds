@@ -69,7 +69,7 @@ def getBuild(branch,jdk){
         sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
         sh 'echo "org.gradle.jvmargs=-Xmx8g -Xms4g -XX:MaxMetaspaceSize=512m -Dfile.encoding=UTF-8" >> gradle.properties'
         unstash name: 'init.gradle.spring-framework'
-        sh "./gradlew build --info --no-daemon --no-build-cache --continue --init-script init.gradle.spring-framework -Djetty.version=${JETTY_VERSION} -Djetty.reactive.httpclient=${JETTY_REACTIVE_HTTPCLIENT_VERSION}"
+        sh "./gradlew build --info --no-build-cache --continue --init-script init.gradle.spring-framework -Djetty.version=${JETTY_VERSION} -Djetty.reactive.httpclient=${JETTY_REACTIVE_HTTPCLIENT_VERSION}"
       }
     }
   }
