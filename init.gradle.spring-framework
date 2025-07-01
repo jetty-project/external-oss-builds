@@ -13,21 +13,6 @@ allprojects {
       }
     }
   }
-  repositories {
-    maven {
-      url "https://oss.sonatype.org/content/groups/jetty-with-staging/"
-      content {
-        includeGroupByRegex("org.eclipse.jetty.*")
-      }
-    }
-    maven {
-      url "https://oss.sonatype.org/content/repositories/jetty-snapshots/"
-      content {
-        includeGroupByRegex("org.eclipse.jetty.*")
-      }
-    }
-
-  }
   tasks.withType(Test).configureEach {
     exclude '**/**AvailabilityProbesAutoConfigurationTests.class'  // Excludes AvailabilityProbesAutoConfigurationTests
     exclude '**/**ManagementPortAndPathWithAntPatcherSampleActuatorApplicationTests.class'  // Excludes ManagementPortAndPathWithAntPatcherSampleActuatorApplicationTests
