@@ -19,7 +19,7 @@ pipeline {
                   userRemoteConfigs: [[url: 'https://github.com/cometd/cometd.git']]])
       }
     }
-    stage("Build Apppengine"){
+    stage("Build Cometd"){
       steps{
         timeout( time: 120, unit: 'MINUTES' ) {
           withEnv(["JAVA_HOME=${ tool "$jdk" }",
@@ -35,7 +35,7 @@ pipeline {
       post {
         always {
           script{
-            currentBuild.description = "Build Appengine branch ${COMETD_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
+            currentBuild.description = "Build Cometd branch ${COMETD_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
           }
           junit testResults: '**/target/surefire-reports/*.xml'
         }
