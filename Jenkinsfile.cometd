@@ -8,7 +8,7 @@ pipeline {
     string( defaultValue: '12.0.23', description: 'Jetty version to use to build Cometd project',
         name: 'JETTY_VERSION' )
     string( defaultValue: 'jdk21', description: 'JDK to use (jdk8,jdk11,jdk17, jdk21)', name: 'JDK' )
-    string( defaultValue: 'main', description: 'Cometd branch', name: 'COMETD_BRANCH' )
+    string( defaultValue: '8.0.x', description: 'Cometd branch', name: 'COMETD_BRANCH' )
   }
   stages {
     stage("Checkout Cometd"){
