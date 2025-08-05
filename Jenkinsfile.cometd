@@ -27,7 +27,7 @@ pipeline {
                    "MAVEN_OPTS=-Xms6g -Xmx8g -Djava.awt.headless=true"]) {
             configFileProvider(
                 [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS')]) {
-              sh "mvn -s $GLOBAL_MVN_SETTINGS -V -B -U clean install -Dmaven.test.failure.ignore=true -fae -Djetty.version=${JETTY_VERSION}"
+              sh "mvn -s $GLOBAL_MVN_SETTINGS -V -B -U clean install -Dmaven.test.failure.ignore=true -fae -Djetty-version=${JETTY_VERSION}"
             }
           }
         }
