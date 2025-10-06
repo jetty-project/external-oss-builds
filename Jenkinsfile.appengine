@@ -31,9 +31,9 @@ pipeline {
                  "MAVEN_OPTS=-Xms6g -Xmx8g -Djava.awt.headless=true"]) {
             configFileProvider(
                   [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS')]) {   
-            sh "mvn mvn versions:set-property -Dproperty=jetty121.version -DnewVersion=${JETTY121_VERSION}"
-            sh "mvn mvn versions:set-property -Dproperty=jetty12.version -DnewVersion=${JETTY12_VERSION}"
-            sh "mvn mvn versions:set-property -Dproperty=jetty.version -DnewVersion=${JETTY_VERSION}"
+            sh "mvn s $GLOBAL_MVN_SETTINGS -V -B mvn versions:set-property -Dproperty=jetty121.version -DnewVersion=${JETTY121_VERSION}"
+            sh "mvn s $GLOBAL_MVN_SETTINGS -V -B mvn versions:set-property -Dproperty=jetty12.version -DnewVersion=${JETTY12_VERSION}"
+            sh "mvn s $GLOBAL_MVN_SETTINGS -V -B mvn versions:set-property -Dproperty=jetty.version -DnewVersion=${JETTY_VERSION}"
             sh "git diff"
             sh "mvn -s $GLOBAL_MVN_SETTINGS -V -B -U clean install -Dmaven.test.failure.ignore=true -fae"
             }
