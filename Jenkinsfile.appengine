@@ -5,11 +5,11 @@ pipeline {
     buildDiscarder logRotator( numToKeepStr: '20' )
   }
   parameters {
-    string( defaultValue: '12.1.1', description: 'Jetty 12.1.x version to use to build Appengine project',
+    string( defaultValue: '12.1.5', description: 'Jetty 12.1.x version to use to build Appengine project',
             name: 'JETTY121_VERSION' )
-    string( defaultValue: '12.0.28', description: 'Jetty 12.0.x version to use to build Appengine project',
+    string( defaultValue: '12.0.31', description: 'Jetty 12.0.x version to use to build Appengine project',
             name: 'JETTY12_VERSION' )
-    string( defaultValue: '9.4.54.v20240208', description: 'Jetty 9.x version to use to build Appengine project',
+    string( defaultValue: '9.4.58.v20250814', description: 'Jetty 9.x version to use to build Appengine project',
             name: 'JETTY_VERSION' )
     string( defaultValue: 'jdk21', description: 'JDK to use (jdk8,jdk11,jdk17)', name: 'JDK' )
     string( defaultValue: 'main', description: 'Appengine branch', name: 'APPENGINE_BRANCH' )
