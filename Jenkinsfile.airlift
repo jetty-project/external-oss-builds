@@ -5,9 +5,9 @@ pipeline {
     buildDiscarder logRotator( numToKeepStr: '20' )
   }
   parameters {
-    string( defaultValue: '12.0.7', description: 'Jetty version to use to build Airlift project',
+    string( defaultValue: '12.1.5', description: 'Jetty version to use to build Airlift project',
             name: 'JETTY_VERSION' )
-    string( defaultValue: 'jdk21', description: 'JDK to use (jdk8,jdk11,jdk17)', name: 'JDK' )
+    string( defaultValue: 'jdk25', description: 'JDK to use (jdk8,jdk11,jdk17)', name: 'JDK' )
     string( defaultValue: 'master', description: 'Airlift branch', name: 'AIRLIFT_BRANCH' )
   }
   stages {
@@ -27,7 +27,7 @@ pipeline {
                  "MAVEN_OPTS=-Xms2g -Xmx6g -Djava.awt.headless=true"]) {
             configFileProvider(
                   [configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS')]) {          
-            sh "mvn -s $GLOBAL_MVN_SETTINGS -V -B -U clean install -T3 -Dmaven.test.failure.ignore=true -fae -Ddep.jetty.version=${JETTY_VERSION}"
+            sh "mvn -s $GLOBAL_MVN_SETTINGS -V -B -U clean install -Dmaven.test.failure.ignore=true -fae -Ddep.jetty.version=${JETTY_VERSION}"
             }
          }  
         }    
