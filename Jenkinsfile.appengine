@@ -43,7 +43,7 @@ pipeline {
       post {
         always {
           script{
-            currentBuild.description = "Build Appengine branch ${APPENGINE_BRANCH}, Jetty Version ${JETTY_VERSION}, jdk ${jdk}"
+            currentBuild.description = "Build Appengine branch ${APPENGINE_BRANCH}, Jetty Version ${JETTY_VERSION}, ${JETTY12_VERSION}, ${JETTY121_VERSION}, jdk ${jdk}"
           }
           junit testResults: '**/target/surefire-reports/*.xml'
         }
