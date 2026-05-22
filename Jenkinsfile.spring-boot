@@ -40,7 +40,9 @@ pipeline {
             withEnv(["JAVA_HOME=${tool "$jdk"}",
                      "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool 'maven3'}/bin",
                      "MAVEN_OPTS=-Xms2g -Xmx4g -Djava.awt.headless=true"]) {
-              sh "mvn -ntp -V -B clean install -T5 -Pfast -e -DskipTests"
+              configFileProvider([configFile(fileId: 'oss-settings.xml', variable: 'GLOBAL_MVN_SETTINGS')]) {
+                sh "mvn -ntp -V -B clean install -s $GLOBAL_MVN_SETTINGS -T5 -Pfast -e -DskipTests -Dmaven.build.cache.remote.url=http://nexus-service.nexus.svc.cluster.local:8081/repository/maven-build-cache -Dmaven.build.cache.remote.enabled=true -Dmaven.build.cache.remote.save.enabled=true -Dmaven.build.cache.remote.server.id=nexus-cred"
+              }
               script {
                 JETTY_VERSION = sh(script: "mvn -N help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true).trim()
                 sh "echo 'Built Jetty Version: ${JETTY_VERSION}'"
