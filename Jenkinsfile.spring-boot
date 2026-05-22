@@ -17,6 +17,8 @@ pipeline {
     string( defaultValue: 'main', description: 'springboot branch, main, 3.4.x', name: 'SPRINGBOOT_BRANCH' )
     string( defaultValue: '4.0.12', description: 'Jetty Reactive HttpClient version to use in the build',
             name: 'JETTY_REACTIVE_HTTPCLIENT_VERSION' )
+    booleanParam( defaultValue: true, description: 'Use internal Nexus mirror instead of plugins.gradle.org',
+                 name: 'USE_NEXUS_MIRROR' )
   }
   stages {
     stage('Create Gradle home'){
@@ -96,7 +98,7 @@ def getBuild(branch,jdk){
         sh "cat gradle.properties"
         unstash name: 'init.gradle.spring-framework'
         // --no-build-cache 
-        sh "./gradlew build --info -no-daemon --continue --init-script init.gradle.spring-framework -Djetty.version=${JETTY_VERSION} -Djetty.reactive.httpclient=${JETTY_REACTIVE_HTTPCLIENT_VERSION}"
+        sh "./gradlew build --info -no-daemon --continue --init-script init.gradle.spring-framework -Djetty.version=${JETTY_VERSION} -Djetty.reactive.httpclient=${JETTY_REACTIVE_HTTPCLIENT_VERSION}${USE_NEXUS_MIRROR ? ' -DuseNexusMirror=true' : ''}"
       }
     }
   }

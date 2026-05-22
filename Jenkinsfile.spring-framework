@@ -15,6 +15,8 @@ pipeline {
     string( defaultValue: 'jdk21', description: 'JDK to use (jdk17,jdk21)', name: 'JDK' )
     string( defaultValue: 'main', description: 'spring-framework branch, main, 6.2.x', name: 'SPRINGFRAMEWORK_BRANCH' )
     string( defaultValue: 'spring-projects', description: 'spring-framework github org', name: 'SPRINGFRAMEWORK_ORG' )
+    booleanParam( defaultValue: true, description: 'Use internal Nexus mirror instead of plugins.gradle.org',
+                  name: 'USE_NEXUS_MIRROR' )
   }
   stages {
     stage('Create Gradle home'){
@@ -38,7 +40,7 @@ pipeline {
           configFileProvider([configFile(fileId: 'init.gradle', variable: 'INIT_GRADLE')]) {
             sh "cp $INIT_GRADLE $HOME/.gradle/init.gradle"
             unstash name: 'init.gradle.spring-framework'
-            sh "./gradlew build --info --no-daemon --no-build-cache --init-script init.gradle.spring-framework -Djetty.version=${JETTY_VERSION} -Djetty.reactive.httpclient=${JETTY_REACTIVE_HTTPCLIENT_VERSION}"
+            sh "./gradlew build --info --no-daemon --no-build-cache --init-script init.gradle.spring-framework -Djetty.version=${JETTY_VERSION} -Djetty.reactive.httpclient=${JETTY_REACTIVE_HTTPCLIENT_VERSION}${USE_NEXUS_MIRROR ? ' -DuseNexusMirror=true' : ''}"
           }
         }
       }
