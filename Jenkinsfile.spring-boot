@@ -10,6 +10,8 @@ pipeline {
   parameters {
     string( defaultValue: '12.0.16', description: 'Jetty version to use to build SpringBoot project',
             name: 'JETTY_VERSION' )
+    string( defaultValue: '', description: 'Jetty branch to build from source (e.g. jetty-12.0.x). If set, JETTY_VERSION is ignored and the version is derived from the built branch.',
+            name: 'JETTY_BRANCH' )
     string( defaultValue: 'jdk21', description: 'JDK to use (jdk17,jdk21)', name: 'JDK' )
     string( defaultValue: 'spring-projects', description: 'github org to use', name: 'GITHUB_ORG' )
     string( defaultValue: 'main', description: 'springboot branch, main, 3.4.x', name: 'SPRINGBOOT_BRANCH' )
@@ -21,6 +23,29 @@ pipeline {
       when { expression { GRADLE_HOME == 'false' } }
       steps {
         sh "mkdir $HOME/.gradle"
+      }
+    }
+    stage("Checkout and Build Jetty"){
+      when { expression { return JETTY_BRANCH?.trim() } }
+      steps {
+        ws('jetty') {
+          deleteDir()
+          checkout([$class: 'GitSCM',
+                    branches: [[name: "*/$JETTY_BRANCH"]],
+                    extensions: [[$class: 'CloneOption', depth: 1, noTags: true, shallow: true]],
+                    userRemoteConfigs: [[url: 'https://github.com/jetty/jetty.project.git']]])
+          timeout(time: 45, unit: 'MINUTES') {
+            withEnv(["JAVA_HOME=${tool "$JDK"}",
+                     "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool 'maven3'}/bin",
+                     "MAVEN_OPTS=-Xms2g -Xmx4g -Djava.awt.headless=true"]) {
+              sh "mvn -ntp -V -B clean install -T5 -Pfast -e -DskipTests"
+              script {
+                JETTY_VERSION = sh(script: "mvn -N help:evaluate -Dexpression=project.version -q -DforceStdout", returnStdout: true).trim()
+                sh "echo 'Built Jetty Version: ${JETTY_VERSION}'"
+              }
+            }
+          }
+        }
       }
     }
     stage("Checkout SpringBoot"){
