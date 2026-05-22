@@ -8,14 +8,14 @@ pipeline {
     buildDiscarder logRotator( numToKeepStr: '20' )
   }
   parameters {
-    string( defaultValue: '12.0.16', description: 'Jetty version to use to build SpringBoot project',
+    string( defaultValue: '12.1.9', description: 'Jetty version to use to build SpringBoot project',
             name: 'JETTY_VERSION' )
     string( defaultValue: '', description: 'Jetty branch to build from source (e.g. jetty-12.0.x). If set, JETTY_VERSION is ignored and the version is derived from the built branch.',
             name: 'JETTY_BRANCH' )
-    string( defaultValue: 'jdk21', description: 'JDK to use (jdk17,jdk21)', name: 'JDK' )
+    string( defaultValue: 'jdk25', description: 'JDK to use (jdk17,jdk21,jdk25)', name: 'JDK' )
     string( defaultValue: 'spring-projects', description: 'github org to use', name: 'GITHUB_ORG' )
     string( defaultValue: 'main', description: 'springboot branch, main, 3.4.x', name: 'SPRINGBOOT_BRANCH' )
-    string( defaultValue: '4.0.9', description: 'Jetty Reactive HttpClient version to use in the build',
+    string( defaultValue: '4.0.12', description: 'Jetty Reactive HttpClient version to use in the build',
             name: 'JETTY_REACTIVE_HTTPCLIENT_VERSION' )
   }
   stages {
