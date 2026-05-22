@@ -35,7 +35,7 @@ pipeline {
                     extensions: [[$class: 'CloneOption', depth: 1, noTags: true, shallow: true]],
                     userRemoteConfigs: [[url: 'https://github.com/jetty/jetty.project.git']]])
           timeout(time: 45, unit: 'MINUTES') {
-            withEnv(["JAVA_HOME=${tool "$JDK"}",
+            withEnv(["JAVA_HOME=${tool "$jdk"}",
                      "PATH+MAVEN=${env.JAVA_HOME}/bin:${tool 'maven3'}/bin",
                      "MAVEN_OPTS=-Xms2g -Xmx4g -Djava.awt.headless=true"]) {
               sh "mvn -ntp -V -B clean install -T5 -Pfast -e -DskipTests"
