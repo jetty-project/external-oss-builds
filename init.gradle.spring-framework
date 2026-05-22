@@ -1,4 +1,7 @@
 allprojects {
+  repositories {
+    mavenLocal()
+  }
   configurations.all {
     resolutionStrategy.dependencySubstitution {
       all { dependency ->
