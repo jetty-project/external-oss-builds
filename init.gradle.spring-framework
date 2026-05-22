@@ -1,6 +1,29 @@
 allprojects {
   repositories {
     mavenLocal()
+    // Remove gradle plugin portal from dependency repositories and replace with internal Nexus mirror
+    all { ArtifactRepository repo ->
+      if (repo instanceof MavenArtifactRepository && repo.url.host == 'plugins.gradle.org') {
+        remove repo
+      }
+    }
+    maven {
+      url 'http://nexus-service.nexus.svc.cluster.local:8081/repository/maven-public'
+      allowInsecureProtocol = true
+    }
+  }
+  buildscript {
+    repositories {
+      all { ArtifactRepository repo ->
+        if (repo instanceof MavenArtifactRepository && repo.url.host == 'plugins.gradle.org') {
+          remove repo
+        }
+      }
+      maven {
+        url 'http://nexus-service.nexus.svc.cluster.local:8081/repository/maven-public'
+        allowInsecureProtocol = true
+      }
+    }
   }
   configurations.all {
     resolutionStrategy.dependencySubstitution {
