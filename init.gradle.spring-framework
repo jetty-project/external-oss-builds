@@ -30,16 +30,18 @@ allprojects {
     }
   }
   configurations.all {
-    resolutionStrategy.dependencySubstitution {
-      all { dependency ->
-        if (dependency.requested instanceof ModuleComponentSelector) {
-          def group = dependency.requested.group
-          if (group.startsWith("org.eclipse.jetty")) { // && !group.equals('org.eclipse.jetty.websocket')) {
-            def module = dependency.requested.module
-            def version = (module == 'jetty-reactive-httpclient') ? System.getProperty("jetty.reactive.httpclient","4.0.9") : System.getProperty("jetty.version","12.0.17")
-            dependency.useTarget "$group:$module:$version"
-          }
-        }
+    // Override the version of every org.eclipse.jetty* coordinate to the version under test.
+    // We use eachDependency/useVersion rather than dependencySubstitution/useTarget so the
+    // dependency keeps its original selector and the BOM (jetty-bom / jetty-ee11-bom) constraint
+    // edges remain intact. Spring Boot's checkRuntimeClasspathForUnconstrainedDirectDependencies
+    // task matches direct dependencies against constraints by group:module; useTarget replaces the
+    // selector and drops that match, making managed modules look unconstrained and failing the build.
+    resolutionStrategy.eachDependency { details ->
+      def group = details.requested.group
+      if (group.startsWith("org.eclipse.jetty")) { // && !group.equals('org.eclipse.jetty.websocket')) {
+        def module = details.requested.name
+        def version = (module == 'jetty-reactive-httpclient') ? System.getProperty("jetty.reactive.httpclient","4.0.9") : System.getProperty("jetty.version","12.0.17")
+        details.useVersion version
       }
     }
   }
