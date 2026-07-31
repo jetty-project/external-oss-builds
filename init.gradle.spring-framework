@@ -45,6 +45,12 @@ allprojects {
       }
     }
   }
+  // This init script is unstashed into the workspace root, so Spring Framework's checkstyleNohttp
+  // task scans it and rejects the plain http:// internal Nexus mirror URLs above (NoHttp rule).
+  // The Nexus service is only reachable over http, so exclude this file from the nohttp scan.
+  tasks.matching { it.name == 'checkstyleNohttp' }.configureEach {
+    exclude '**/init.gradle.spring-framework'
+  }
   tasks.withType(Test).configureEach {
     exclude '**/**AvailabilityProbesAutoConfigurationTests.class'  // Excludes AvailabilityProbesAutoConfigurationTests
     exclude '**/**ManagementPortAndPathWithAntPatcherSampleActuatorApplicationTests.class'  // Excludes ManagementPortAndPathWithAntPatcherSampleActuatorApplicationTests
